@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的文件 - SuperEditor</title>
+    <!-- Ant Design CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/antd@5.21.6/dist/reset.css">
+    <!-- Ant Design Icons -->
+    <link rel="stylesheet" href="https://unpkg.com/@ant-design/icons@5.4.0/lib/index.css">
+    <style>
+        :root {
+            --primary-color: #2F4F39;
+            --primary-hover: #233A2B;
+            --primary-light: #7BA89E;
+            --background-light: #E6E1D6;
+            --text-color: #333;
+            --text-secondary: #666;
+            --border-color: #d9d9d9;
+            --shadow: 0 3px 6px -4px rgba(0,0,0,.12), 0 6px 16px 0 rgba(0,0,0,.08), 0 9px 28px 8px rgba(0,0,0,.05);
+            --card-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: var(--text-color);
+        }
+
+        .app-layout {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            gap: 24px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo::before {
+            content: '📝';
+            font-size: 24px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: rgba(47, 79, 57, 0.1);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(47, 79, 57, 0.15);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-name {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .app-content {
+            flex: 1;
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin: 8px 0 0 0;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 6px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .btn-danger {
+            background-color: #ff4d4f;
+            border-color: #ff4d4f;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d9363e;
+            border-color: #d9363e;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            border-color: #d9d9d9;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 12px;
+            height: 24px;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f5f5f5;
+            border-color: var(--primary-light);
+        }
+
+        /* Hamburger menu styles */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .menu-toggle:hover {
+            background-color: rgba(47, 79, 57, 0.1);
+        }
+
+        /* Mobile menu styles */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            z-index: 200;
+            max-height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 12px 24px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .mobile-nav-link:hover {
+            background-color: rgba(47, 79, 57, 0.1);
+            color: var(--primary-color);
+        }
+
+        .mobile-nav-link:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* File Browser */
+        .file-browser {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .file-browser-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb-item {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--primary-color);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .file-browser-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .file-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .file-list th {
+            background: #fafafa;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .file-list td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .file-list tr:hover {
+            background: #f9f9f9;
+        }
+
+        .file-list tr:last-child td {
+            border-bottom: none;
+        }
+
+        .file-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        .file-icon.folder {
+            background: #e6f7ff;
+            color: #1890ff;
+        }
+
+        .file-icon.document {
+            background: #f6ffed;
+            color: #52c41a;
+        }
+
+        .file-icon.image {
+            background: #fff1f0;
+            color: #ff4d4f;
+        }
+
+        .file-icon.video {
+            background: #fff2e8;
+            color: #fa8c16;
+        }
+
+        .file-icon.audio {
+            background: #f9f0ff;
+            color: #722ed1;
+        }
+
+        .file-icon.archive {
+            background: #f0f0f0;
+            color: #8c8c8c;
+        }
+
+        .file-icon.other {
+            background: #f0f0f0;
+            color: #8c8c8c;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .file-name:hover {
+            color: var(--primary-color);
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .file-size {
+            color: var(--text-secondary);
+        }
+
+        .file-date {
+            color: var(--text-secondary);
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            background: white;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 32px;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(47, 79, 57, 0.02);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary-color);
+            background: rgba(47, 79, 57, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            color: var(--text-color);
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .empty-state-description {
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 24px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .pagination-info {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-right: 16px;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .pagination-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: white;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #f5f5f5;
+        }
+
+        .pagination-btn.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .pagination-ellipsis {
+            padding: 6px 4px;
+            color: var(--text-secondary);
+        }
+
+        .pagination-jump {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .jump-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .jump-input {
+            width: 60px;
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .jump-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(47, 79, 57, 0.1);
+        }
+
+        .jump-btn {
+            padding: 6px 12px;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 16px;
+                gap: 12px;
+            }
+
+            .main-nav {
+                gap: 4px;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
+
+            .nav-link {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+
+            .app-content {
+                padding: 16px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .file-browser-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .file-list {
+                font-size: 12px;
+            }
+
+            .file-list th,
+            .file-list td {
+                padding: 8px 12px;
+            }
+
+            .file-browser-actions {
+                flex-wrap: wrap;
+            }
+
+            .file-actions {
+                min-width: 140px;
+            }
+
+            .file-actions .btn {
+                font-size: 12px;
+                padding: 4px 8px;
+                min-height: 30px;
+            }
+
+            .pagination {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .pagination-info {
+                margin-right: 0;
+                margin-bottom: 8px;
+            }
+
+            .pagination-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 6px;
+            }
+
+            .pagination-jump {
+                margin-left: 0;
+                margin-top: 8px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .jump-input {
+                width: 50px;
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+
+            .jump-btn {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 0 8px;
+                gap: 8px;
+                position: relative;
+            }
+
+            .main-nav {
+                display: none;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .user-menu {
+                position: relative;
+            }
+
+            /* Ensure table is properly displayed on mobile */
+            .file-list-container {
+                overflow-x: auto;
+            }
+
+            .file-list {
+                min-width: 100%;
+                width: 100%;
+                table-layout: fixed;
+                font-size: 12px;
+            }
+
+            .file-list th,
+            .file-list td {
+                padding: 6px 8px;
+            }
+
+            .file-list th:nth-child(1),
+            .file-list td:nth-child(1) {
+                width: 50%;
+                max-width: 200px;
+            }
+
+            .file-list td:nth-child(1) .file-name {
+                max-width: 150px;
+            }
+
+            .file-list th:nth-child(2),
+            .file-list td:nth-child(2) {
+                width: 15%;
+            }
+
+            .file-list th:nth-child(3),
+            .file-list td:nth-child(3) {
+                display: none;
+            }
+
+            .file-list th:nth-child(4),
+            .file-list td:nth-child(4) {
+                width: 35%;
+            }
+
+            .file-icon {
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+                margin-right: 6px;
+            }
+
+            /* Make sure file actions are visible and properly sized */
+            .file-actions {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 200px !important;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 3px;
+                min-width: auto;
+            }
+
+            .file-actions .btn {
+                font-size: 11px !important;
+                padding: 3px 6px !important;
+                min-height: 28px !important;
+                min-width: 55px !important;
+                max-width: 70px !important;
+                text-align: center !important;
+                justify-content: center !important;
+                white-space: nowrap !important;
+                flex: 1 !important;
+                display: inline-flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                background: var(--bg-secondary) !important;
+                color: var(--text-color) !important;
+                border: 1px solid var(--border-color) !important;
+                border-radius: 3px !important;
+                cursor: pointer !important;
+                line-height: 1.2 !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+
+            .file-actions .btn:hover {
+                background: var(--bg-hover) !important;
+                border-color: var(--primary-color) !important;
+            }
+
+            .file-actions .btn span {
+                display: inline-block !important;
+                visibility: visible !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                font-size: inherit !important;
+                line-height: inherit !important;
+            }
+
+            /* Ensure all button content is visible */
+            .file-actions .btn > span:first-child {
+                display: inline-block !important;
+                width: auto !important;
+                min-width: 16px;
+                margin-right: 4px;
+                font-size: 12px !important;
+            }
+
+            .file-actions .btn > span:last-child {
+                display: inline-block !important;
+                width: auto !important;
+                flex: 1;
+                font-size: 11px !important;
+            }
+
+            /* Hide any potential duplicate pseudo-elements */
+            .file-actions .btn span::before {
+                display: none !important;
+                content: none !important;
+            }
+
+            /* Special handling for iPad and tablets */
+            @media (max-width: 768px) {
+                .file-actions .btn {
+                    font-size: 12px !important;
+                    padding: 4px 8px !important;
+                    min-height: 32px !important;
+                    min-width: 70px !important;
+                    max-width: 100px !important;
+                    flex-direction: row !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    gap: 4px !important;
+                }
+
+                .file-actions .btn .btn-icon {
+                    font-size: 14px !important;
+                    display: inline-block !important;
+                    margin: 0 !important;
+                    line-height: 1 !important;
+                    flex-shrink: 0 !important;
+                }
+
+                .file-actions .btn .btn-text {
+                    font-size: 11px !important;
+                    display: inline-block !important;
+                    line-height: 1 !important;
+                    margin: 0 !important;
+                    white-space: nowrap !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                    flex: 1 !important;
+                }
+            }
+
+            /* Mobile phone specific styles */
+            @media (max-width: 480px) {
+                .file-actions .btn {
+                    font-size: 11px !important;
+                    padding: 4px 6px !important;
+                    min-height: 32px !important;
+                    min-width: 60px !important;
+                    max-width: 85px !important;
+                    flex-direction: row !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    gap: 3px !important;
+                }
+
+                .file-actions .btn .btn-icon {
+                    font-size: 12px !important;
+                    display: inline-block !important;
+                    margin: 0 !important;
+                    line-height: 1 !important;
+                    flex-shrink: 0 !important;
+                }
+
+                .file-actions .btn .btn-text {
+                    font-size: 10px !important;
+                    display: inline-block !important;
+                    line-height: 1 !important;
+                    margin: 0 !important;
+                    white-space: nowrap !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                    flex: 1 !important;
+                    text-align: left !important;
+                }
+
+                /* Ensure button container can accommodate horizontal layout */
+                .file-actions {
+                    max-width: 280px !important;
+                }
+
+                .file-actions .btn {
+                    min-width: 55px !important;
+                    max-width: 90px !important;
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <header class="app-header">
+            <div class="header-content">
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">☰</button>
+                <a href="/dashboard/" class="logo">SuperEditor</a>
+                <nav class="main-nav">
+                    <a href="/my-documents/" class="nav-link">我的文档</a>
+                    <a href="/my-images/" class="nav-link">我的图片</a>
+                    <a href="/my-files/" class="nav-link active">我的文件</a>
+                    <a href="/system-settings/" class="nav-link">系统设置</a>
+                    <a href="/user-settings/" class="nav-link">用户设置</a>
+                </nav>
+                <div class="user-menu">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <button type="button" class="btn btn-secondary" id="logoutBtn">退出登录</button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <a href="/my-documents/" class="mobile-nav-link">我的文档</a>
+                <a href="/my-images/" class="mobile-nav-link">我的图片</a>
+                <a href="/my-files/" class="mobile-nav-link">我的文件</a>
+                <a href="/system-settings/" class="mobile-nav-link">系统设置</a>
+                <a href="/user-settings/" class="mobile-nav-link">用户设置</a>
+                <button class="mobile-nav-link" id="mobileLogoutBtn" style="background: none; border: none; text-align: left; cursor: pointer;">退出登录</button>
+            </div>
+        </header>
+
+        <div class="app-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">我的文件</h1>
+                    <p class="page-subtitle">管理您的所有文件和文件夹</p>
+                </div>
+                <button type="button" class="btn btn-primary" id="uploadBtn">
+                    <span>📤</span>
+                    <span>上传文件</span>
+                </button>
+            </div>
+
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">点击或拖拽文件到此处上传</div>
+                <div class="upload-hint">支持各种文件格式，单个文件最大 50MB</div>
+                <button type="button" class="btn btn-primary">选择文件</button>
+                <input type="file" id="fileInput" multiple style="display: none;">
+            </div>
+
+            <!-- File Browser -->
+            <div class="file-browser">
+                <div class="file-browser-header">
+                    <div class="breadcrumb" id="breadcrumb">
+                        <a href="#" class="breadcrumb-item" data-path="/">🏠 首页</a>
+                    </div>
+                    <div class="file-browser-actions">
+                        <button type="button" class="btn btn-sm" id="refreshBtn">
+                            <span>🔄</span>
+                            <span>刷新</span>
+                        </button>
+                        <button type="button" class="btn btn-sm" id="createFolderBtn">
+                            <span>📁</span>
+                            <span>新建文件夹</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="filesContainer">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <div>加载中...</div>
+                    </div>
+                </div>
+                <div id="paginationContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPath = '/';
+        let currentPage = 1;
+        let currentLimit = 15;
+        let totalRecords = 0;
+        let totalPages = 1;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize mobile menu
+            initMobileMenu();
+
+            // Load user information and check authentication
+            loadUserInfo();
+
+            // Initialize upload functionality
+            initializeUpload();
+
+            // Load initial files
+            loadFiles();
+
+            // Event listeners
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                await handleLogout();
+            });
+            document.getElementById('refreshBtn').addEventListener('click', loadFiles);
+            document.getElementById('createFolderBtn').addEventListener('click', createFolder);
+        });
+
+        async function loadUserInfo() {
+            try {
+                const response = await fetch('/api/auth/me', {
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('userName').textContent = data.name || data.email || 'User';
+                } else {
+                    if (response.status === 401) {
+                        window.location.href = '/login/';
+                        return;
+                    }
+                    document.getElementById('userName').textContent = 'User';
+                    console.error('Failed to load user info:', data.error);
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                document.getElementById('userName').textContent = 'User';
+                window.location.href = '/login/';
+            }
+        }
+
+        async function loadFiles() {
+            try {
+                const response = await fetch(`/api/files?path=${encodeURIComponent(currentPath)}&page=${currentPage}&limit=${currentLimit}`, {
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // 更新分页信息
+                    if (data.pagination) {
+                        currentPage = data.pagination.currentPage;
+                        totalPages = data.pagination.totalPages;
+                        totalRecords = data.pagination.totalRecords;
+                        currentLimit = data.pagination.limit;
+                    }
+
+                    // 使用后端返回的分离数据
+                    renderFiles(data.files || [], data.folders || []);
+                    updateBreadcrumb();
+                    renderPagination();
+                } else {
+                    console.error('Failed to load files:', data.error);
+                    document.getElementById('filesContainer').innerHTML =
+                        `<div class="loading"><p>Error loading files: ${data.error}</p></div>`;
+                    document.getElementById('paginationContainer').innerHTML = '';
+                }
+            } catch (error) {
+                console.error('Error loading files:', error);
+                document.getElementById('filesContainer').innerHTML =
+                    `<div class="loading"><p>Error loading files: ${error.message}</p></div>`;
+                document.getElementById('paginationContainer').innerHTML = '';
+            }
+        }
+
+        function renderFiles(files, folders) {
+            const container = document.getElementById('filesContainer');
+            container.innerHTML = '';
+
+            // 确保参数是数组
+            files = files || [];
+            folders = folders || [];
+
+            if (files.length === 0 && folders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📂</div>
+                        <div class="empty-state-title">此文件夹为空</div>
+                        <div class="empty-state-description">上传文件或创建文件夹开始使用</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Create table
+            const table = document.createElement('table');
+            table.className = 'file-list';
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>大小</th>
+                        <th>修改时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            `;
+
+            const tbody = table.querySelector('tbody');
+
+            // Add folders first
+            folders.forEach(folder => {
+                const row = createFileRow(folder, true);
+                tbody.appendChild(row);
+            });
+
+            // Add files
+            files.forEach(file => {
+                const row = createFileRow(file, false);
+                tbody.appendChild(row);
+            });
+
+            container.appendChild(table);
+        }
+
+        function createFileRow(item, isFolder) {
+            const row = document.createElement('tr');
+
+            const iconClass = getFileIcon(item.name, isFolder);
+            const size = isFolder ? '-' : formatFileSize(item.size);
+            const date = new Date(item.updated_at || item.created_at).toLocaleDateString('zh-CN');
+            const name = item.name;
+            const itemId = item.id || item.key;
+
+            row.innerHTML = `
+                <td>
+                    ${isFolder ?
+                        `<a href="#" class="file-name" onclick="navigateToFolder('${item.path || ''}/${name}'); return false;">
+                            <span class="file-icon folder">📁</span>${name}
+                        </a>` :
+                        `<span class="file-name">
+                            <span class="file-icon ${iconClass}">${getFileIconEmoji(iconClass)}</span>${name}
+                        </span>`
+                    }
+                </td>
+                <td class="file-size">${size}</td>
+                <td class="file-date">${date}</td>
+                <td>
+                    <div class="file-actions">
+                        ${!isFolder ?
+                            `<button type="button" class="btn btn-sm mobile-copy" onclick="copyFileLink('${itemId}', '${name}', event)">
+                                <span class="btn-icon">🔗</span>
+                                <span class="btn-text">复制链接</span>
+                            </button>
+                            <button type="button" class="btn btn-sm mobile-download" onclick="downloadFile('${itemId}', '${name}')">
+                                <span class="btn-icon">📥</span>
+                                <span class="btn-text">下载</span>
+                            </button>` : ''
+                        }
+                        <button type="button" class="btn btn-secondary btn-sm mobile-rename" onclick="renameItem('${itemId}', '${name}', ${isFolder})">
+                            <span class="btn-icon">✏️</span>
+                            <span class="btn-text">重命名</span>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm mobile-delete" onclick="deleteItem('${itemId}', '${name}', ${isFolder})">
+                            <span class="btn-icon">🗑️</span>
+                            <span class="btn-text">删除</span>
+                        </button>
+                    </div>
+                </td>
+            `;
+
+            return row;
+        }
+
+        function getFileIcon(filename, isFolder) {
+            if (isFolder) return 'folder';
+
+            const ext = filename.split('.').pop().toLowerCase();
+            const iconMap = {
+                // Documents
+                'pdf': 'document',
+                'doc': 'document', 'docx': 'document',
+                'txt': 'document', 'md': 'document',
+                'rtf': 'document', 'odt': 'document',
+
+                // Images
+                'jpg': 'image', 'jpeg': 'image', 'png': 'image',
+                'gif': 'image', 'bmp': 'image', 'svg': 'image',
+                'webp': 'image', 'ico': 'image',
+
+                // Videos
+                'mp4': 'video', 'avi': 'video', 'mov': 'video',
+                'wmv': 'video', 'flv': 'video', 'webm': 'video',
+                'mkv': 'video', '3gp': 'video',
+
+                // Audio
+                'mp3': 'audio', 'wav': 'audio', 'flac': 'audio',
+                'aac': 'audio', 'ogg': 'audio', 'wma': 'audio',
+
+                // Archives
+                'zip': 'archive', 'rar': 'archive', '7z': 'archive',
+                'tar': 'archive', 'gz': 'archive', 'bz2': 'archive'
+            };
+
+            return iconMap[ext] || 'other';
+        }
+
+        function getFileIconEmoji(iconClass) {
+            const emojiMap = {
+                'folder': '📁',
+                'document': '📄',
+                'image': '🖼️',
+                'video': '🎥',
+                'audio': '🎵',
+                'archive': '📦',
+                'other': '📎'
+            };
+            return emojiMap[iconClass] || '📎';
+        }
+
+        function renderPagination() {
+            const container = document.getElementById('paginationContainer');
+
+            // 如果总页数小于等于1，不显示分页
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const startRecord = (currentPage - 1) * currentLimit + 1;
+            const endRecord = Math.min(currentPage * currentLimit, totalRecords);
+
+            let paginationHTML = `
+                <div class="pagination">
+                    <div class="pagination-info">
+                        显示 ${startRecord}-${endRecord} 共 ${totalRecords} 项
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">
+                            上一页
+                        </button>
+            `;
+
+            // 生成页码按钮
+            const maxButtons = 5; // 最多显示5个页码按钮
+            let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+            let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+
+            if (endPage - startPage + 1 < maxButtons) {
+                startPage = Math.max(1, endPage - maxButtons + 1);
+            }
+
+            // 如果起始页不是1，添加第一页和省略号
+            if (startPage > 1) {
+                paginationHTML += `
+                    <button class="pagination-btn" onclick="goToPage(1)">1</button>
+                `;
+                if (startPage > 2) {
+                    paginationHTML += `<span class="pagination-ellipsis">...</span>`;
+                }
+            }
+
+            // 添加页码按钮
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHTML += `
+                    <button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">
+                        ${i}
+                    </button>
+                `;
+            }
+
+            // 如果结束页不是最后一页，添加省略号和最后一页
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    paginationHTML += `<span class="pagination-ellipsis">...</span>`;
+                }
+                paginationHTML += `
+                    <button class="pagination-btn" onclick="goToPage(${totalPages})">${totalPages}</button>
+                `;
+            }
+
+            paginationHTML += `
+                        <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">
+                            下一页
+                        </button>
+                        <div class="pagination-jump">
+                            <span class="jump-label">前往</span>
+                            <input type="number"
+                                   class="jump-input"
+                                   id="jumpInput"
+                                   min="1"
+                                   max="${totalPages}"
+                                   value="${currentPage}"
+                                   onkeypress="handleJumpKeyPress(event)">
+                            <button class="pagination-btn jump-btn" onclick="handleJumpToPage()">确定</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = paginationHTML;
+        }
+
+        function goToPage(page) {
+            if (page < 1 || page > totalPages || page === currentPage) {
+                return;
+            }
+            currentPage = page;
+            loadFiles();
+        }
+
+        function handleJumpToPage() {
+            const jumpInput = document.getElementById('jumpInput');
+            if (!jumpInput) return;
+
+            const targetPage = parseInt(jumpInput.value);
+
+            // 验证输入
+            if (isNaN(targetPage) || targetPage < 1) {
+                jumpInput.value = currentPage;
+                return;
+            }
+
+            if (targetPage > totalPages) {
+                jumpInput.value = totalPages;
+                return;
+            }
+
+            // 如果是当前页，不做任何操作
+            if (targetPage === currentPage) {
+                return;
+            }
+
+            // 跳转到指定页
+            goToPage(targetPage);
+        }
+
+        function handleJumpKeyPress(event) {
+            // 如果按下回车键，执行跳转
+            if (event.key === 'Enter') {
+                handleJumpToPage();
+            }
+            // 如果按下ESC键，恢复当前页码
+            else if (event.key === 'Escape') {
+                const jumpInput = document.getElementById('jumpInput');
+                if (jumpInput) {
+                    jumpInput.value = currentPage;
+                }
+            }
+        }
+
+        function initializeUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const uploadBtn = document.getElementById('uploadBtn');
+
+            // Click handlers
+            uploadArea.addEventListener('click', () => fileInput.click());
+            uploadBtn.addEventListener('click', () => fileInput.click());
+
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+
+            // Drag and drop
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+        }
+
+        async function handleFiles(files) {
+            if (files.length === 0) return;
+
+            for (let file of files) {
+                if (file.size > 50 * 1024 * 1024) { // 50MB
+                    alert(`文件 ${file.name} 超过 50MB 大小限制`);
+                    continue;
+                }
+
+                await uploadFile(file);
+            }
+
+            // Clear file input
+            document.getElementById('fileInput').value = '';
+
+            // Reload files
+            currentPage = 1; // 重置到第一页
+            loadFiles();
+        }
+
+        async function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('path', currentPath);
+
+            try {
+                const response = await fetch('/api/files/upload', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Upload failed');
+                }
+
+                console.log('File uploaded successfully:', result);
+                // 上传成功后刷新文件列表
+                await loadFiles();
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                alert(`上传 ${file.name} 失败: ${error.message}`);
+            }
+        }
+
+        async function navigateToFolder(path) {
+            currentPath = path;
+            currentPage = 1; // 重置到第一页
+            await loadFiles();
+        }
+
+        function updateBreadcrumb() {
+            const breadcrumb = document.getElementById('breadcrumb');
+            const pathParts = currentPath.split('/').filter(part => part);
+
+            let html = '<a href="#" class="breadcrumb-item" onclick="navigateToFolder(\'/\'); return false;">🏠 首页</a>';
+            let currentPartialPath = '';
+
+            pathParts.forEach((part, index) => {
+                currentPartialPath += '/' + part;
+                html += '<span class="breadcrumb-separator">/</span>';
+
+                if (index === pathParts.length - 1) {
+                    html += `<span class="breadcrumb-item">${part}</span>`;
+                } else {
+                    html += `<a href="#" class="breadcrumb-item" onclick="navigateToFolder('${currentPartialPath}'); return false;">${part}</a>`;
+                }
+            });
+
+            breadcrumb.innerHTML = html;
+        }
+
+        function createFolder() {
+            const folderName = prompt('请输入文件夹名称:');
+            if (!folderName) return;
+
+            // Simple validation
+            if (folderName.includes('/') || folderName.includes('\\')) {
+                alert('文件夹名称不能包含 / 或 \\');
+                return;
+            }
+
+            uploadFolder(folderName);
+        }
+
+        async function uploadFolder(folderName) {
+            try {
+                const response = await fetch('/api/files/create-folder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: folderName,
+                        path: currentPath
+                    }),
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    currentPage = 1; // 重置到第一页
+                    await loadFiles();
+                } else {
+                    alert(`创建文件夹失败: ${result.error}`);
+                }
+            } catch (error) {
+                console.error('Error creating folder:', error);
+                alert('创建文件夹时发生网络错误');
+            }
+        }
+
+        async function downloadFile(fileId, filename) {
+            try {
+                const response = await fetch(`/api/files/download/${encodeURIComponent(fileId)}`, {
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Download failed');
+                }
+
+                // Create download link
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } catch (error) {
+                console.error('Error downloading file:', error);
+                alert(`下载 ${filename} 失败: ${error.message}`);
+            }
+        }
+
+        async function renameItem(fileId, currentName, isFolder) {
+            const newName = prompt(`请输入新的${isFolder ? '文件夹' : '文件'}名称:`, currentName);
+            if (!newName || newName === currentName) return;
+
+            if (newName.includes('/') || newName.includes('\\')) {
+                alert('名称不能包含 / 或 \\');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/files/rename', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        fileId: fileId,
+                        newName: newName,
+                        isFolder: isFolder
+                    }),
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    currentPage = 1; // 重置到第一页
+                    await loadFiles();
+                } else {
+                    alert(`重命名失败: ${result.error}`);
+                }
+            } catch (error) {
+                console.error('Error renaming item:', error);
+                alert('重命名时发生网络错误');
+            }
+        }
+
+        async function deleteItem(fileId, name, isFolder) {
+            if (!confirm(`确定要删除${isFolder ? '文件夹' : '文件'} "${name}" 吗？${isFolder ? '此操作将删除文件夹及其所有内容，' : ''}此操作不可恢复。`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/files/${encodeURIComponent(fileId)}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    currentPage = 1; // 重置到第一页
+                    await loadFiles();
+                } else {
+                    alert(`删除失败: ${result.error}`);
+                }
+            } catch (error) {
+                console.error('Error deleting item:', error);
+                alert('删除时发生网络错误');
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (!bytes) return '0 B';
+            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        // Mobile menu functionality
+        function initMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
+            // Toggle mobile menu
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+
+            // Close menu when clicking links
+            const mobileLinks = mobileMenu.querySelectorAll('.mobile-nav-link');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+
+            // Mobile logout functionality
+            mobileLogoutBtn.addEventListener('click', async () => {
+                await handleLogout();
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!menuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                }
+            });
+        }
+
+        // Copy file link functionality
+        async function copyFileLink(fileId, filename, event) {
+            try {
+                // 构建文件访问链接
+                const fileUrl = `${window.location.origin}/api/files/${encodeURIComponent(fileId)}`;
+
+                await navigator.clipboard.writeText(fileUrl);
+
+                // 显示临时成功消息（与图片页面保持一致）
+                const btn = event.target.closest('button');
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = '<span>✅</span><span>已复制</span>';
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy URL:', err);
+                alert('复制链接失败，请手动复制');
+            }
+        }
+
+        // Logout functionality
+        async function handleLogout() {
+            try {
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    window.location.href = '/login/';
+                } else {
+                    alert('Logout failed');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Network error during logout');
+            }
+        }
+    </script>
+</body>
+</html>

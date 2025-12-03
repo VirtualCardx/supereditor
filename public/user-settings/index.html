@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户设置 - SuperEditor</title>
+    <!-- Ant Design CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/antd@5.21.6/dist/reset.css">
+    <!-- Ant Design Icons -->
+    <link rel="stylesheet" href="https://unpkg.com/@ant-design/icons@5.4.0/lib/index.css">
+    <style>
+        :root {
+            --primary-color: #2F4F39;
+            --primary-hover: #233A2B;
+            --primary-light: #7BA89E;
+            --background-light: #E6E1D6;
+            --text-color: #333;
+            --text-secondary: #666;
+            --border-color: #d9d9d9;
+            --shadow: 0 3px 6px -4px rgba(0,0,0,.12), 0 6px 16px 0 rgba(0,0,0,.08), 0 9px 28px 8px rgba(0,0,0,.05);
+            --card-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+            --success-color: #52c41a;
+            --warning-color: #faad14;
+            --error-color: #ff4d4f;
+            --info-color: #1890ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: var(--text-color);
+        }
+
+        .app-layout {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            gap: 24px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo::before {
+            content: '📝';
+            font-size: 24px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: rgba(47, 79, 57, 0.1);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(47, 79, 57, 0.15);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-name {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .app-content {
+            flex: 1;
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0 0 8px 0;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 6px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .btn-danger {
+            background-color: var(--error-color);
+            border-color: var(--error-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d9363e;
+            border-color: #d9363e;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #389e0d;
+            border-color: #389e0d;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f5f5f5;
+            border-color: var(--primary-light);
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 12px;
+            height: 24px;
+        }
+
+        /* Hamburger menu styles */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .menu-toggle:hover {
+            background-color: rgba(47, 79, 57, 0.1);
+        }
+
+        /* Mobile menu styles */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            z-index: 200;
+            max-height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 12px 24px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .mobile-nav-link:hover {
+            background-color: rgba(47, 79, 57, 0.1);
+            color: var(--primary-color);
+        }
+
+        .mobile-nav-link:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Settings Layout */
+        .settings-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+        }
+
+        .settings-sidebar {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            height: fit-content;
+            position: sticky;
+            top: 88px;
+        }
+
+        .settings-nav {
+            padding: 8px 0;
+        }
+
+        .settings-nav-item {
+            padding: 10px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .settings-nav-item:hover {
+            background: rgba(47, 79, 57, 0.05);
+            color: var(--primary-color);
+        }
+
+        .settings-nav-item.active {
+            background: rgba(47, 79, 57, 0.1);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .settings-nav-icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .settings-content {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            min-height: 600px;
+        }
+
+        .settings-section {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+
+        .settings-section-header {
+            margin-bottom: 20px;
+        }
+
+        .settings-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0 0 8px 0;
+        }
+
+        .settings-section-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .settings-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 14px;
+        }
+
+        .form-label .required {
+            color: var(--error-color);
+            margin-left: 4px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(47, 79, 57, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .form-switch {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .switch.active {
+            background: var(--primary-color);
+        }
+
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .switch.active::after {
+            transform: translateX(20px);
+        }
+
+        .form-help {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Profile Section */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: var(--text-secondary);
+        }
+
+        .avatar-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary-color);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .avatar-upload:hover {
+            background: var(--primary-hover);
+        }
+
+        .profile-info h3 {
+            margin: 0 0 4px 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .profile-info p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: #f9f9f9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Sessions */
+        .session-list {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .session-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .session-item:last-child {
+            border-bottom: none;
+        }
+
+        .session-info h4 {
+            margin: 0 0 4px 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .session-info p {
+            margin: 0;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .session-current {
+            background: rgba(82, 196, 26, 0.05);
+        }
+
+        .session-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-info {
+            background: #e6f7ff;
+            border: 1px solid #91d5ff;
+            color: #0050b3;
+        }
+
+        .alert-success {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            color: #389e0d;
+        }
+
+        .alert-warning {
+            background: #fffbe6;
+            border: 1px solid #ffe58f;
+            color: #d48806;
+        }
+
+        .alert-error {
+            background: #fff2f0;
+            border: 1px solid #ffccc7;
+            color: #cf1322;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 16px;
+                gap: 12px;
+            }
+
+            .main-nav {
+                gap: 4px;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
+
+            .nav-link {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+
+            .app-content {
+                padding: 16px;
+            }
+
+            .settings-container {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .settings-sidebar {
+                position: static;
+            }
+
+            .settings-nav {
+                display: flex;
+                overflow-x: auto;
+                padding: 0;
+            }
+
+            .settings-nav-item {
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+
+            .settings-nav-item.active {
+                border-left: none;
+                border-bottom-color: var(--primary-color);
+            }
+
+            .form-group-row {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 0 8px;
+                gap: 8px;
+                position: relative;
+            }
+
+            .main-nav {
+                display: none;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .user-menu {
+                position: relative;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .session-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .session-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <header class="app-header">
+            <div class="header-content">
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">☰</button>
+                <a href="/dashboard/" class="logo">SuperEditor</a>
+                <nav class="main-nav">
+                    <a href="/my-documents/" class="nav-link">我的文档</a>
+                    <a href="/my-images/" class="nav-link">我的图片</a>
+                    <a href="/my-files/" class="nav-link">我的文件</a>
+                    <a href="/system-settings/" class="nav-link">系统设置</a>
+                    <a href="/user-settings/" class="nav-link active">用户设置</a>
+                </nav>
+                <div class="user-menu">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <button type="button" class="btn btn-secondary" id="logoutBtn">退出登录</button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <a href="/my-documents/" class="mobile-nav-link">我的文档</a>
+                <a href="/my-images/" class="mobile-nav-link">我的图片</a>
+                <a href="/my-files/" class="mobile-nav-link">我的文件</a>
+                <a href="/system-settings/" class="mobile-nav-link">系统设置</a>
+                <a href="/user-settings/" class="mobile-nav-link">用户设置</a>
+                <button class="mobile-nav-link" id="mobileLogoutBtn" style="background: none; border: none; text-align: left; cursor: pointer;">退出登录</button>
+            </div>
+        </header>
+
+        <div class="app-content">
+            <div class="page-header">
+                <h1 class="page-title">用户设置</h1>
+                <p class="page-subtitle">管理您的账户信息和个人偏好设置</p>
+            </div>
+
+            <div class="settings-container">
+                <!-- Sidebar Navigation -->
+                <aside class="settings-sidebar">
+                    <nav class="settings-nav">
+                        <a href="#profile" class="settings-nav-item active" data-section="profile">
+                            <span class="settings-nav-icon">👤</span>
+                            <span>个人资料</span>
+                        </a>
+                        <a href="#account" class="settings-nav-item" data-section="account">
+                            <span class="settings-nav-icon">🔐</span>
+                            <span>账户安全</span>
+                        </a>
+                        <a href="#preferences" class="settings-nav-item" data-section="preferences">
+                            <span class="settings-nav-icon">⚙️</span>
+                            <span>偏好设置</span>
+                        </a>
+                        <a href="#notifications" class="settings-nav-item" data-section="notifications">
+                            <span class="settings-nav-icon">🔔</span>
+                            <span>通知设置</span>
+                        </a>
+                        <a href="#sessions" class="settings-nav-item" data-section="sessions">
+                            <span class="settings-nav-icon">💻</span>
+                            <span>会话管理</span>
+                        </a>
+                        <a href="#storage" class="settings-nav-item" data-section="storage">
+                            <span class="settings-nav-icon">💾</span>
+                            <span>存储使用</span>
+                        </a>
+                    </nav>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="settings-content" id="settingsContent">
+                    <!-- Content will be loaded dynamically -->
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 'profile';
+        let currentUser = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize mobile menu
+            initMobileMenu();
+
+            // Load user information and check authentication
+            loadUserInfo();
+
+            // Initialize navigation
+            initializeNavigation();
+
+            // Load initial section
+            loadSection('profile');
+
+            // Event listeners
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                await handleLogout();
+            });
+        });
+
+        async function loadUserInfo() {
+            try {
+                const response = await fetch('/api/auth/me', {
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentUser = data;
+                    document.getElementById('userName').textContent = data.name || data.email || 'User';
+                } else {
+                    if (response.status === 401) {
+                        window.location.href = '/login/';
+                        return;
+                    }
+                    document.getElementById('userName').textContent = 'User';
+                    console.error('Failed to load user info:', data.error);
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                document.getElementById('userName').textContent = 'User';
+                window.location.href = '/login/';
+            }
+        }
+
+        function initializeNavigation() {
+            const navItems = document.querySelectorAll('.settings-nav-item');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = item.dataset.section;
+
+                    // Update active state
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+
+                    // Load section content
+                    loadSection(section);
+                });
+            });
+        }
+
+        async function loadSection(section) {
+            currentSection = section;
+            const content = document.getElementById('settingsContent');
+
+            // Show loading
+            content.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <div>加载中...</div>
+                </div>
+            `;
+
+            try {
+                // Generate section content
+                const sectionContent = await generateSectionContent(section);
+                content.innerHTML = sectionContent;
+
+                // Initialize section-specific functionality
+                initializeSection(section);
+            } catch (error) {
+                console.error('Error loading section:', error);
+                content.innerHTML = `
+                    <div class="loading">
+                        <p>Error loading section: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function generateSectionContent(section) {
+            const contents = {
+                profile: `
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">个人资料</h2>
+                            <p class="settings-section-description">管理您的基本个人信息</p>
+                        </div>
+
+                        <div class="profile-header">
+                            <div class="avatar-container">
+                                <div class="avatar" id="userAvatar">👤</div>
+                                <label class="avatar-upload">
+                                    <span>📷</span>
+                                    <input type="file" accept="image/*" style="display: none;" onchange="uploadAvatar(event)">
+                                </label>
+                            </div>
+                            <div class="profile-info">
+                                <h3>${currentUser?.name || '用户'}</h3>
+                                <p>${currentUser?.email || 'user@example.com'}</p>
+                            </div>
+                        </div>
+
+                        <form class="settings-form" id="profileForm">
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label class="form-label">姓名 <span class="required">*</span></label>
+                                    <input type="text" class="form-input" value="${currentUser?.name || ''}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">邮箱 <span class="required">*</span></label>
+                                    <input type="email" class="form-input" value="${currentUser?.email || ''}" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">个人简介</label>
+                                <textarea class="form-textarea" rows="3" placeholder="介绍一下您自己..."></textarea>
+                                <div class="form-help">其他用户可以看到您的个人简介</div>
+                            </div>
+
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label class="form-label">职位</label>
+                                    <input type="text" class="form-input" placeholder="例如：产品经理、工程师">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">公司</label>
+                                    <input type="text" class="form-input" placeholder="您的公司名称">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">个人网站</label>
+                                <input type="url" class="form-input" placeholder="https://example.com">
+                                <div class="form-help">您的个人博客或作品集网站</div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn" onclick="resetForm('profileForm')">重置</button>
+                                <button type="submit" class="btn btn-primary">保存更改</button>
+                            </div>
+                        </form>
+                    </div>
+                `,
+
+                account: `
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">账户安全</h2>
+                            <p class="settings-section-description">保护您的账户安全</p>
+                        </div>
+
+                        <form class="settings-form" id="accountForm">
+                            <div class="form-group">
+                                <label class="form-label">当前密码</label>
+                                <input type="password" class="form-input" placeholder="请输入当前密码">
+                            </div>
+
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label class="form-label">新密码</label>
+                                    <input type="password" class="form-input" placeholder="请输入新密码" id="newPassword">
+                                    <div class="form-help">密码至少包含 8 个字符</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">确认新密码</label>
+                                    <input type="password" class="form-input" placeholder="请再次输入新密码" id="confirmPassword">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-switch">
+                                    <label class="form-label">启用双因素认证</label>
+                                    <div class="switch" onclick="toggleSwitch(this)" id="twoFactorSwitch"></div>
+                                </div>
+                                <div class="form-help">为您的账户提供额外的安全保护</div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn" onclick="resetForm('accountForm')">重置</button>
+                                <button type="submit" class="btn btn-primary">更新密码</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">危险操作</h2>
+                            <p class="settings-section-description">不可恢复的账户操作</p>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <span>⚠️</span>
+                            <span>以下操作不可恢复，请谨慎操作</span>
+                        </div>
+
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-danger" onclick="deleteAccount()">
+                                <span>🗑️</span>
+                                <span>删除账户</span>
+                            </button>
+                        </div>
+                    </div>
+                `,
+
+                preferences: `
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">偏好设置</h2>
+                            <p class="settings-section-description">自定义您的使用体验</p>
+                        </div>
+
+                        <form class="settings-form" id="preferencesForm">
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label class="form-label">界面语言</label>
+                                    <select class="form-select">
+                                        <option value="zh-CN" selected>简体中文</option>
+                                        <option value="en-US">English</option>
+                                        <option value="ja-JP">日本語</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">时区</label>
+                                    <select class="form-select">
+                                        <option value="Asia/Shanghai" selected>Asia/Shanghai</option>
+                                        <option value="UTC">UTC</option>
+                                        <option value="America/New_York">America/New_York</option>
+                                        <option value="Europe/London">Europe/London</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">日期格式</label>
+                                <select class="form-select">
+                                    <option value="YYYY-MM-DD" selected>2024-01-15</option>
+                                    <option value="DD/MM/YYYY">15/01/2024</option>
+                                    <option value="MM/DD/YYYY">01/15/2024</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-switch">
+                                    <label class="form-label">深色模式</label>
+                                    <div class="switch" onclick="toggleSwitch(this)"></div>
+                                </div>
+                                <div class="form-help">启用深色主题（当前不可用）</div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-switch">
+                                    <label class="form-label">紧凑视图</label>
+                                    <div class="switch" onclick="toggleSwitch(this)"></div>
+                                </div>
+                                <div class="form-help">使用更紧凑的界面布局</div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn" onclick="resetForm('preferencesForm')">重置</button>
+                                <button type="submit" class="btn btn-primary">保存设置</button>
+                            </div>
+                        </form>
+                    </div>
+                `,
+
+                notifications: `
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">通知设置</h2>
+                            <p class="settings-section-description">管理您的通知偏好</p>
+                        </div>
+
+                        <form class="settings-form" id="notificationsForm">
+                            <div class="form-group">
+                                <div class="form-switch">
+                                    <label class="form-label">邮件通知</label>
+                                    <div class="switch active" onclick="toggleSwitch(this)"></div>
+                                </div>
+                                <div class="form-help">接收重要更新和活动邮件通知</div>
+                            </div>
+
+                            <div class="form-group">
+                                <h4 style="margin: 0 0 12px 0; font-size: 16px; color: var(--text-color);">邮件通知类型</h4>
+
+                                <div class="form-switch">
+                                    <label class="form-label">安全提醒</label>
+                                    <div class="switch active" onclick="toggleSwitch(this)"></div>
+                                </div>
+
+                                <div class="form-switch">
+                                    <label class="form-label">系统更新</label>
+                                    <div class="switch active" onclick="toggleSwitch(this)"></div>
+                                </div>
+
+                                <div class="form-switch">
+                                    <label class="form-label">文档分享</label>
+                                    <div class="switch" onclick="toggleSwitch(this)"></div>
+                                </div>
+
+                                <div class="form-switch">
+                                    <label class="form-label">产品更新</label>
+                                    <div class="switch" onclick="toggleSwitch(this)"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-switch">
+                                    <label class="form-label">浏览器通知</label>
+                                    <div class="switch" onclick="toggleSwitch(this)"></div>
+                                </div>
+                                <div class="form-help">在浏览器中接收实时通知</div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn" onclick="resetForm('notificationsForm')">重置</button>
+                                <button type="submit" class="btn btn-primary">保存设置</button>
+                            </div>
+                        </form>
+                    </div>
+                `,
+
+                sessions: `
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">会话管理</h2>
+                            <p class="settings-section-description">管理您的登录会话</p>
+                        </div>
+
+                        <div class="session-list" id="sessionList">
+                            <!-- Sessions will be loaded here -->
+                        </div>
+                    </div>
+                `,
+
+                storage: `
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">存储使用</h2>
+                            <p class="settings-section-description">查看您的存储使用情况</p>
+                        </div>
+
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalUsed">-</div>
+                                <div class="stat-label">已使用存储</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalFiles">-</div>
+                                <div class="stat-label">文件总数</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalDocuments">-</div>
+                                <div class="stat-label">文档数量</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalImages">-</div>
+                                <div class="stat-label">图片数量</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 32px;">
+                            <h3 style="margin: 0 0 16px 0;">存储详情</h3>
+                            <div style="background: #f9f9f9; border: 1px solid var(--border-color); border-radius: 6px; padding: 20px;">
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span>文档</span>
+                                        <span id="documentStorage">-</span>
+                                    </div>
+                                    <div style="background: #e0e0e0; height: 8px; border-radius: 4px;">
+                                        <div id="documentBar" style="background: var(--primary-color); height: 100%; border-radius: 4px; width: 0%;"></div>
+                                    </div>
+                                </div>
+
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span>图片</span>
+                                        <span id="imageStorage">-</span>
+                                    </div>
+                                    <div style="background: #e0e0e0; height: 8px; border-radius: 4px;">
+                                        <div id="imageBar" style="background: var(--info-color); height: 100%; border-radius: 4px; width: 0%;"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span>其他文件</span>
+                                        <span id="otherStorage">-</span>
+                                    </div>
+                                    <div style="background: #e0e0e0; height: 8px; border-radius: 4px;">
+                                        <div id="otherBar" style="background: var(--warning-color); height: 100%; border-radius: 4px; width: 0%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            };
+
+            return contents[section] || '<div class="loading">Section not found</div>';
+        }
+
+        function initializeSection(section) {
+            switch (section) {
+                case 'sessions':
+                    loadSessions();
+                    break;
+                case 'storage':
+                    loadStorageStats();
+                    break;
+            }
+
+            // Initialize form handlers
+            const form = document.querySelector(`#${section}Form`);
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    saveSettings(section);
+                });
+            }
+        }
+
+        async function loadSessions() {
+            const container = document.getElementById('sessionList');
+
+            try {
+                // Mock session data
+                const sessions = [
+                    {
+                        id: 'current',
+                        device: 'Chrome on Windows',
+                        location: 'Beijing, China',
+                        ip: '192.168.1.100',
+                        lastActive: '当前会话',
+                        isCurrent: true
+                    },
+                    {
+                        id: 'session2',
+                        device: 'Safari on iPhone',
+                        location: 'Shanghai, China',
+                        ip: '192.168.1.101',
+                        lastActive: '2 小时前',
+                        isCurrent: false
+                    },
+                    {
+                        id: 'session3',
+                        device: 'Firefox on macOS',
+                        location: 'Guangzhou, China',
+                        ip: '192.168.1.102',
+                        lastActive: '1 天前',
+                        isCurrent: false
+                    }
+                ];
+
+                let html = '';
+                sessions.forEach(session => {
+                    html += `
+                        <div class="session-item ${session.isCurrent ? 'session-current' : ''}">
+                            <div class="session-info">
+                                <h4>${session.device} ${session.isCurrent ? '(当前会话)' : ''}</h4>
+                                <p>📍 ${session.location} • 🌐 ${session.ip} • 🕒 ${session.lastActive}</p>
+                            </div>
+                            <div class="session-actions">
+                                ${!session.isCurrent ? `
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="terminateSession('${session.id}')">
+                                        <span>🚫</span>
+                                        <span>终止会话</span>
+                                    </button>
+                                ` : '<span style="color: var(--success-color); font-size: 12px;">✅ 当前会话</span>'}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html || '<p style="padding: 20px; text-align: center; color: var(--text-secondary);">暂无其他会话</p>';
+            } catch (error) {
+                console.error('Error loading sessions:', error);
+                container.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--text-secondary);">无法加载会话列表</p>';
+            }
+        }
+
+        async function loadStorageStats() {
+            try {
+                // Mock storage data
+                const mockData = {
+                    totalUsed: '2.3 GB',
+                    totalFiles: '156',
+                    totalDocuments: '45',
+                    totalImages: '89',
+                    details: {
+                        documents: { size: '1.2 GB', percentage: 52 },
+                        images: { size: '0.8 GB', percentage: 35 },
+                        other: { size: '0.3 GB', percentage: 13 }
+                    }
+                };
+
+                // Update statistics
+                document.getElementById('totalUsed').textContent = mockData.totalUsed;
+                document.getElementById('totalFiles').textContent = mockData.totalFiles;
+                document.getElementById('totalDocuments').textContent = mockData.totalDocuments;
+                document.getElementById('totalImages').textContent = mockData.totalImages;
+
+                // Update storage details
+                document.getElementById('documentStorage').textContent = mockData.details.documents.size;
+                document.getElementById('documentBar').style.width = mockData.details.documents.percentage + '%';
+
+                document.getElementById('imageStorage').textContent = mockData.details.images.size;
+                document.getElementById('imageBar').style.width = mockData.details.images.percentage + '%';
+
+                document.getElementById('otherStorage').textContent = mockData.details.other.size;
+                document.getElementById('otherBar').style.width = mockData.details.other.percentage + '%';
+            } catch (error) {
+                console.error('Error loading storage stats:', error);
+            }
+        }
+
+        function toggleSwitch(element) {
+            element.classList.toggle('active');
+        }
+
+        function resetForm(formId) {
+            const form = document.getElementById(formId);
+            if (form) {
+                form.reset();
+                // Reset switches to initial state
+                form.querySelectorAll('.switch').forEach(switchElement => {
+                    if (switchElement.hasAttribute('data-default')) {
+                        if (switchElement.getAttribute('data-default') === 'true') {
+                            switchElement.classList.add('active');
+                        } else {
+                            switchElement.classList.remove('active');
+                        }
+                    }
+                });
+            }
+        }
+
+        async function saveSettings(section) {
+            try {
+                console.log(`Saving settings for section: ${section}`);
+
+                // Special handling for password change
+                if (section === 'account') {
+                    const newPassword = document.getElementById('newPassword').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+
+                    if (newPassword && newPassword !== confirmPassword) {
+                        showNotification('两次输入的密码不一致', 'error');
+                        return;
+                    }
+                }
+
+                // Show success message
+                showNotification('设置已保存', 'success');
+            } catch (error) {
+                console.error('Error saving settings:', error);
+                showNotification('保存设置失败', 'error');
+            }
+        }
+
+        function uploadAvatar(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // In a real application, this would upload the file to the server
+                console.log('Uploading avatar:', file.name);
+                showNotification('头像上传成功', 'success');
+
+                // Update avatar preview (in a real app, this would use the uploaded image URL)
+                const avatar = document.getElementById('userAvatar');
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatar.style.backgroundImage = `url(${e.target.result})`;
+                    avatar.style.backgroundSize = 'cover';
+                    avatar.style.backgroundPosition = 'center';
+                    avatar.textContent = '';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function terminateSession(sessionId) {
+            if (confirm('确定要终止此会话吗？该设备将被强制登出。')) {
+                // In a real application, this would make an API call
+                console.log('Terminating session:', sessionId);
+                showNotification('会话已终止', 'success');
+                loadSessions();
+            }
+        }
+
+        function deleteAccount() {
+            const confirmation = prompt('此操作不可恢复！请输入 "DELETE" 确认删除您的账户：');
+            if (confirmation === 'DELETE') {
+                // In a real application, this would make an API call
+                showNotification('账户删除功能暂未实现', 'warning');
+            } else if (confirmation) {
+                showNotification('确认文本不正确', 'error');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create a simple notification
+            const alertClass = `alert-${type}`;
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass}`;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '10000';
+            notification.style.minWidth = '300px';
+            notification.innerHTML = `
+                <span>${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Mobile menu functionality
+        function initMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
+            // Toggle mobile menu
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+
+            // Close menu when clicking links
+            const mobileLinks = mobileMenu.querySelectorAll('.mobile-nav-link');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+
+            // Mobile logout functionality
+            mobileLogoutBtn.addEventListener('click', async () => {
+                await handleLogout();
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!menuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                }
+            });
+        }
+
+        // Logout functionality
+        async function handleLogout() {
+            try {
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    window.location.href = '/login/';
+                } else {
+                    alert('Logout failed');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Network error during logout');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统设置 - SuperEditor</title>
+    <!-- Ant Design CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/antd@5.21.6/dist/reset.css">
+    <!-- Ant Design Icons -->
+    <link rel="stylesheet" href="https://unpkg.com/@ant-design/icons@5.4.0/lib/index.css">
+    <style>
+        :root {
+            --primary-color: #2F4F39;
+            --primary-hover: #233A2B;
+            --primary-light: #7BA89E;
+            --background-light: #E6E1D6;
+            --text-color: #333;
+            --text-secondary: #666;
+            --border-color: #d9d9d9;
+            --shadow: 0 3px 6px -4px rgba(0,0,0,.12), 0 6px 16px 0 rgba(0,0,0,.08), 0 9px 28px 8px rgba(0,0,0,.05);
+            --card-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+            --success-color: #52c41a;
+            --warning-color: #faad14;
+            --error-color: #ff4d4f;
+            --info-color: #1890ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: var(--text-color);
+        }
+
+        .app-layout {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            gap: 24px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo::before {
+            content: '📝';
+            font-size: 24px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: rgba(47, 79, 57, 0.1);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(47, 79, 57, 0.15);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-name {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .app-content {
+            flex: 1;
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0 0 8px 0;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 6px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .btn-danger {
+            background-color: var(--error-color);
+            border-color: var(--error-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d9363e;
+            border-color: #d9363e;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #389e0d;
+            border-color: #389e0d;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            border-color: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #d48806;
+            border-color: #d48806;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 12px;
+            height: 24px;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f5f5f5;
+            border-color: var(--primary-light);
+        }
+
+        /* Hamburger menu styles */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .menu-toggle:hover {
+            background-color: rgba(47, 79, 57, 0.1);
+        }
+
+        /* Mobile menu styles */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            z-index: 200;
+            max-height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 12px 24px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .mobile-nav-link:hover {
+            background-color: rgba(47, 79, 57, 0.1);
+            color: var(--primary-color);
+        }
+
+        .mobile-nav-link:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Settings Layout */
+        .settings-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+        }
+
+        .settings-sidebar {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            height: fit-content;
+            position: sticky;
+            top: 88px;
+        }
+
+        .settings-nav {
+            padding: 8px 0;
+        }
+
+        .settings-nav-item {
+            padding: 10px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .settings-nav-item:hover {
+            background: rgba(47, 79, 57, 0.05);
+            color: var(--primary-color);
+        }
+
+        .settings-nav-item.active {
+            background: rgba(47, 79, 57, 0.1);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .settings-nav-icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .settings-content {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            min-height: 600px;
+        }
+
+        .settings-section {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+
+        .settings-section-header {
+            margin-bottom: 20px;
+        }
+
+        .settings-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0 0 8px 0;
+        }
+
+        .settings-section-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .settings-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 14px;
+        }
+
+        .form-label .required {
+            color: var(--error-color);
+            margin-left: 4px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(47, 79, 57, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .form-switch {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .switch.active {
+            background: var(--primary-color);
+        }
+
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .switch.active::after {
+            transform: translateX(20px);
+        }
+
+        .form-help {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* System Status */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .status-card {
+            background: #f9f9f9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .status-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .status-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 4px;
+        }
+
+        .status-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-card.good .status-icon {
+            color: var(--success-color);
+        }
+
+        .status-card.warning .status-icon {
+            color: var(--warning-color);
+        }
+
+        .status-card.error .status-icon {
+            color: var(--error-color);
+        }
+
+        /* Logs */
+        .logs-container {
+            background: #1e1e1e;
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+            font-size: 12px;
+            color: #fff;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .log-level-info {
+            color: #1890ff;
+        }
+
+        .log-level-warning {
+            color: #faad14;
+        }
+
+        .log-level-error {
+            color: #ff4d4f;
+        }
+
+        .log-level-success {
+            color: #52c41a;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-info {
+            background: #e6f7ff;
+            border: 1px solid #91d5ff;
+            color: #0050b3;
+        }
+
+        .alert-success {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            color: #389e0d;
+        }
+
+        .alert-warning {
+            background: #fffbe6;
+            border: 1px solid #ffe58f;
+            color: #d48806;
+        }
+
+        .alert-error {
+            background: #fff2f0;
+            border: 1px solid #ffccc7;
+            color: #cf1322;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 16px;
+                gap: 12px;
+            }
+
+            .main-nav {
+                gap: 4px;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
+
+            .nav-link {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+
+            .app-content {
+                padding: 16px;
+            }
+
+            .settings-container {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .settings-sidebar {
+                position: static;
+            }
+
+            .settings-nav {
+                display: flex;
+                overflow-x: auto;
+                padding: 0;
+            }
+
+            .settings-nav-item {
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+
+            .settings-nav-item.active {
+                border-left: none;
+                border-bottom-color: var(--primary-color);
+            }
+
+            .form-group-row {
+                grid-template-columns: 1fr;
+            }
+
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 0 8px;
+                gap: 8px;
+                position: relative;
+            }
+
+            .main-nav {
+                display: none;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .user-menu {
+                position: relative;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <header class="app-header">
+            <div class="header-content">
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">☰</button>
+                <a href="/dashboard/" class="logo">SuperEditor</a>
+                <nav class="main-nav">
+                    <a href="/my-documents/" class="nav-link">我的文档</a>
+                    <a href="/my-images/" class="nav-link">我的图片</a>
+                    <a href="/my-files/" class="nav-link">我的文件</a>
+                    <a href="/system-settings/" class="nav-link active">系统设置</a>
+                    <a href="/user-settings/" class="nav-link">用户设置</a>
+                </nav>
+                <div class="user-menu">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <button type="button" class="btn btn-secondary" id="logoutBtn">退出登录</button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <a href="/my-documents/" class="mobile-nav-link">我的文档</a>
+                <a href="/my-images/" class="mobile-nav-link">我的图片</a>
+                <a href="/my-files/" class="mobile-nav-link">我的文件</a>
+                <a href="/system-settings/" class="mobile-nav-link">系统设置</a>
+                <a href="/user-settings/" class="mobile-nav-link">用户设置</a>
+                <button class="mobile-nav-link" id="mobileLogoutBtn" style="background: none; border: none; text-align: left; cursor: pointer;">退出登录</button>
+            </div>
+        </header>
+
+        <div class="app-content">
+            <div class="page-header">
+                <h1 class="page-title">系统设置</h1>
+                <p class="page-subtitle">管理 SuperEditor 系统配置和运行状态</p>
+            </div>
+
+            <div class="settings-container">
+                <!-- Sidebar Navigation -->
+                <aside class="settings-sidebar">
+                    <nav class="settings-nav">
+                        <a href="#overview" class="settings-nav-item active" data-section="overview">
+                            <span class="settings-nav-icon">📊</span>
+                            <span>系统概览</span>
+                        </a>
+                        <a href="#general" class="settings-nav-item" data-section="general">
+                            <span class="settings-nav-icon">⚙️</span>
+                            <span>常规设置</span>
+                        </a>
+                        <a href="#storage" class="settings-nav-item" data-section="storage">
+                            <span class="settings-nav-icon">💾</span>
+                            <span>存储配置</span>
+                        </a>
+                        <a href="#security" class="settings-nav-item" data-section="security">
+                            <span class="settings-nav-icon">🔒</span>
+                            <span>安全设置</span>
+                        </a>
+                        <a href="#backup" class="settings-nav-item" data-section="backup">
+                            <span class="settings-nav-icon">📦</span>
+                            <span>备份管理</span>
+                        </a>
+                        <a href="#logs" class="settings-nav-item" data-section="logs">
+                            <span class="settings-nav-icon">📄</span>
+                            <span>系统日志</span>
+                        </a>
+                    </nav>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="settings-content" id="settingsContent">
+                    <!-- Content will be loaded dynamically -->
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 'overview';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize mobile menu
+            initMobileMenu();
+
+            // Load user information and check authentication
+            loadUserInfo();
+
+            // Initialize navigation
+            initializeNavigation();
+
+            // Load initial section
+            loadSection('overview');
+
+            // Event listeners
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                await handleLogout();
+            });
+        });
+
+        async function loadUserInfo() {
+            try {
+                const response = await fetch('/api/auth/me', {
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('userName').textContent = data.name || data.email || 'User';
+                } else {
+                    if (response.status === 401) {
+                        window.location.href = '/login/';
+                        return;
+                    }
+                    document.getElementById('userName').textContent = 'User';
+                    console.error('Failed to load user info:', data.error);
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                document.getElementById('userName').textContent = 'User';
+                window.location.href = '/login/';
+            }
+        }
+
+        function initializeNavigation() {
+            const navItems = document.querySelectorAll('.settings-nav-item');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = item.dataset.section;
+
+                    // Update active state
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+
+                    // Load section content
+                    loadSection(section);
+                });
+            });
+        }
+
+        async function loadSection(section) {
+            currentSection = section;
+            const content = document.getElementById('settingsContent');
+
+            // Show loading
+            content.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <div>加载中...</div>
+                </div>
+            `;
+
+            try {
+                // In a real application, you would fetch this from the server
+                // For now, we'll generate the content client-side
+                const sectionContent = generateSectionContent(section);
+                content.innerHTML = sectionContent;
+
+                // Initialize section-specific functionality
+                initializeSection(section);
+            } catch (error) {
+                console.error('Error loading section:', error);
+                content.innerHTML = `
+                    <div class="loading">
+                        <p>Error loading section: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function generateSectionContent(section) {
+            const contents = {
+                overview: `
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">系统概览</h2>
+                            <p class="settings-section-description">查看系统运行状态和基本信息</p>
+                        </div>
+
+                        <div class="status-grid">
+                            <div class="status-card good">
+                                <div class="status-icon">✅</div>
+                                <div class="status-value">正常</div>
+                                <div class="status-label">系统状态</div>
+                            </div>
+                            <div class="status-card good">
+                                <div class="status-icon">👥</div>
+                                <div class="status-value" id="userCount">-</div>
+                                <div class="status-label">注册用户</div>
+                            </div>
+                            <div class="status-card good">
+                                <div class="status-icon">📄</div>
+                                <div class="status-value" id="documentCount">-</div>
+                                <div class="status-label">文档总数</div>
+                            </div>
+                            <div class="status-card good">
+                                <div class="status-icon">💾</div>
+                                <div class="status-value" id="storageUsed">-</div>
+                                <div class="status-label">存储使用</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h3>系统信息</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+                                <div>
+                                    <strong>版本:</strong> SuperEditor v1.0.0
+                                </div>
+                                <div>
+                                    <strong>运行时间:</strong> <span id="uptime">-</span>
+                                </div>
+                                <div>
+                                    <strong>环境:</strong> Production
+                                </div>
+                                <div>
+                                    <strong>最后更新:</strong> ${new Date().toLocaleDateString('zh-CN')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+
+                general: `
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">常规设置</h2>
+                            <p class="settings-section-description">配置系统基本参数</p>
+                        </div>
+
+                        <form class="settings-form" id="generalForm">
+                            <div class="form-group">
+                                <label class="form-label">系统名称 <span class="required">*</span></label>
+                                <input type="text" class="form-input" value="SuperEditor" required>
+                                <div class="form-help">显示在页面标题和导航栏的系统名称</div>
+                            </div>
+
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label class="form-label">默认语言</label>
+                                    <select class="form-select">
+                                        <option value="zh-CN" selected>简体中文</option>
+                                        <option value="en-US">English</option>
+                                        <option value="ja-JP">日本語</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">时区</label>
+                                    <select class="form-select">
+                                        <option value="Asia/Shanghai" selected>Asia/Shanghai</option>
+                                        <option value="UTC">UTC</option>
+                                        <option value="America/New_York">America/New_York</option>
+                                        <option value="Europe/London">Europe/London</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">系统描述</label>
+                                <textarea class="form-textarea" rows="3">一个功能强大的在线编辑器和文档管理系统</textarea>
+                                <div class="form-help">显示在登录页面的系统描述</div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-switch">
+                                    <label class="form-label">允许用户注册</label>
+                                    <div class="switch active" onclick="toggleSwitch(this)"></div>
+                                </div>
+                                <div class="form-help">是否开放新用户注册功能</div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-switch">
+                                    <label class="form-label">启用邮件通知</label>
+                                    <div class="switch active" onclick="toggleSwitch(this)"></div>
+                                </div>
+                                <div class="form-help">向用户发送重要事件邮件通知</div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn" onclick="resetForm('generalForm')">重置</button>
+                                <button type="submit" class="btn btn-primary">保存设置</button>
+                            </div>
+                        </form>
+                    </div>
+                `,
+
+                storage: `
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">存储配置</h2>
+                            <p class="settings-section-description">管理文件存储和空间限制</p>
+                        </div>
+
+                        <form class="settings-form" id="storageForm">
+                            <div class="form-group">
+                                <label class="form-label">存储后端</label>
+                                <select class="form-select">
+                                    <option value="r2" selected>Cloudflare R2</option>
+                                    <option value="s3">AWS S3</option>
+                                    <option value="local">本地存储</option>
+                                </select>
+                                <div class="form-help">选择文件存储的后端服务</div>
+                            </div>
+
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label class="form-label">单用户存储限制 (MB)</label>
+                                    <input type="number" class="form-input" value="1024" min="0">
+                                    <div class="form-help">0 表示无限制</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">单文件大小限制 (MB)</label>
+                                    <input type="number" class="form-input" value="50" min="1">
+                                    <div class="form-help">单个文件的最大允许大小</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">允许的文件类型</label>
+                                <textarea class="form-textarea" rows="4">jpg,jpeg,png,gif,pdf,doc,docx,txt,md,zip,rar</textarea>
+                                <div class="form-help">用逗号分隔文件扩展名，留空表示允许所有类型</div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-switch">
+                                    <label class="form-label">自动压缩图片</label>
+                                    <div class="switch" onclick="toggleSwitch(this)"></div>
+                                </div>
+                                <div class="form-help">自动压缩上传的图片以节省存储空间</div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn" onclick="resetForm('storageForm')">重置</button>
+                                <button type="submit" class="btn btn-primary">保存设置</button>
+                            </div>
+                        </form>
+                    </div>
+                `,
+
+                security: `
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">安全设置</h2>
+                            <p class="settings-section-description">配置系统安全策略</p>
+                        </div>
+
+                        <form class="settings-form" id="securityForm">
+                            <div class="alert alert-info">
+                                <span>ℹ️</span>
+                                <span>修改安全设置可能影响用户体验，请谨慎操作</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">会话超时时间 (分钟)</label>
+                                <input type="number" class="form-input" value="1440" min="10">
+                                <div class="form-help">用户不活动后自动登出的时间</div>
+                            </div>
+
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label class="form-label">密码最小长度</label>
+                                    <input type="number" class="form-input" value="8" min="6" max="50">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">登录失败锁定次数</label>
+                                    <input type="number" class="form-input" value="5" min="3" max="20">
+                                    <div class="form-help">连续登录失败后锁定账户的次数</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-switch">
+                                    <label class="form-label">启用双因素认证</label>
+                                    <div class="switch" onclick="toggleSwitch(this)"></div>
+                                </div>
+                                <div class="form-help">为用户账户提供额外的安全保护</div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-switch">
+                                    <label class="form-label">强制 HTTPS</label>
+                                    <div class="switch active" onclick="toggleSwitch(this)"></div>
+                                </div>
+                                <div class="form-help">自动将 HTTP 请求重定向到 HTTPS</div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn" onclick="resetForm('securityForm')">重置</button>
+                                <button type="submit" class="btn btn-primary">保存设置</button>
+                            </div>
+                        </form>
+                    </div>
+                `,
+
+                backup: `
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">备份管理</h2>
+                            <p class="settings-section-description">配置系统自动备份和恢复</p>
+                        </div>
+
+                        <form class="settings-form" id="backupForm">
+                            <div class="form-group">
+                                <div class="form-switch">
+                                    <label class="form-label">启用自动备份</label>
+                                    <div class="switch active" onclick="toggleSwitch(this)"></div>
+                                </div>
+                                <div class="form-help">定期自动备份系统数据和用户文件</div>
+                            </div>
+
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label class="form-label">备份频率</label>
+                                    <select class="form-select">
+                                        <option value="daily" selected>每日</option>
+                                        <option value="weekly">每周</option>
+                                        <option value="monthly">每月</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">保留备份数量</label>
+                                    <input type="number" class="form-input" value="30" min="1" max="365">
+                                    <div class="form-help">保留的备份文件数量，超出数量将删除旧备份</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">备份存储位置</label>
+                                <select class="form-select">
+                                    <option value="local" selected>本地存储</option>
+                                    <option value="cloud">云端存储</option>
+                                    <option value="both">本地 + 云端</option>
+                                </select>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-success" onclick="createBackup()">
+                                    <span>📦</span>
+                                    <span>立即备份</span>
+                                </button>
+                                <button type="button" class="btn" onclick="resetForm('backupForm')">重置</button>
+                                <button type="submit" class="btn btn-primary">保存设置</button>
+                            </div>
+                        </form>
+
+                        <div style="margin-top: 32px;">
+                            <h3>最近备份</h3>
+                            <div id="backupList" style="margin-top: 16px;">
+                                <div class="loading">
+                                    <div class="loading-spinner"></div>
+                                    <div>加载备份列表...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+
+                logs: `
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <h2 class="settings-section-title">系统日志</h2>
+                            <p class="settings-section-description">查看和分析系统运行日志</p>
+                        </div>
+
+                        <div style="margin-bottom: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                            <select class="form-select" style="width: auto;" id="logLevel">
+                                <option value="all" selected>所有级别</option>
+                                <option value="error">错误</option>
+                                <option value="warning">警告</option>
+                                <option value="info">信息</option>
+                                <option value="success">成功</option>
+                            </select>
+
+                            <select class="form-select" style="width: auto;" id="logTimeRange">
+                                <option value="1h">最近 1 小时</option>
+                                <option value="6h">最近 6 小时</option>
+                                <option value="24h" selected>最近 24 小时</option>
+                                <option value="7d">最近 7 天</option>
+                                <option value="30d">最近 30 天</option>
+                            </select>
+
+                            <button type="button" class="btn" onclick="refreshLogs()">
+                                <span>🔄</span>
+                                <span>刷新</span>
+                            </button>
+
+                            <button type="button" class="btn btn-primary" onclick="downloadLogs()">
+                                <span>📥</span>
+                                <span>下载日志</span>
+                            </button>
+                        </div>
+
+                        <div class="logs-container" id="logContainer">
+                            <div>正在加载日志...</div>
+                        </div>
+                    </div>
+                `
+            };
+
+            return contents[section] || '<div class="loading">Section not found</div>';
+        }
+
+        function initializeSection(section) {
+            switch (section) {
+                case 'overview':
+                    loadSystemOverview();
+                    break;
+                case 'backup':
+                    loadBackupList();
+                    break;
+                case 'logs':
+                    loadLogs();
+                    break;
+            }
+
+            // Initialize form handlers
+            const form = document.querySelector(`#${section}Form`);
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    saveSettings(section);
+                });
+            }
+        }
+
+        async function loadSystemOverview() {
+            try {
+                // In a real application, fetch this data from the server
+                // For demo purposes, we'll use mock data
+                const mockData = {
+                    userCount: Math.floor(Math.random() * 1000) + 100,
+                    documentCount: Math.floor(Math.random() * 5000) + 500,
+                    storageUsed: (Math.random() * 10 + 1).toFixed(1) + ' GB',
+                    uptime: Math.floor(Math.random() * 30) + 1 + ' 天'
+                };
+
+                document.getElementById('userCount').textContent = mockData.userCount;
+                document.getElementById('documentCount').textContent = mockData.documentCount;
+                document.getElementById('storageUsed').textContent = mockData.storageUsed;
+                document.getElementById('uptime').textContent = mockData.uptime;
+            } catch (error) {
+                console.error('Error loading system overview:', error);
+            }
+        }
+
+        async function loadBackupList() {
+            const container = document.getElementById('backupList');
+
+            try {
+                // Mock backup data
+                const backups = [
+                    { date: '2024-01-15 02:00:00', size: '156 MB', type: '自动', status: '成功' },
+                    { date: '2024-01-14 02:00:00', size: '152 MB', type: '自动', status: '成功' },
+                    { date: '2024-01-13 02:00:00', size: '148 MB', type: '自动', status: '成功' },
+                    { date: '2024-01-12 02:00:00', size: '145 MB', type: '自动', status: '成功' },
+                    { date: '2024-01-11 02:00:00', size: '142 MB', type: '自动', status: '成功' }
+                ];
+
+                let html = '<table style="width: 100%; border-collapse: collapse;">';
+                html += `
+                    <thead>
+                        <tr style="background: #f9f9f9; border-bottom: 1px solid var(--border-color);">
+                            <th style="padding: 12px; text-align: left;">备份时间</th>
+                            <th style="padding: 12px; text-align: left;">大小</th>
+                            <th style="padding: 12px; text-align: left;">类型</th>
+                            <th style="padding: 12px; text-align: left;">状态</th>
+                            <th style="padding: 12px; text-align: left;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                `;
+
+                backups.forEach(backup => {
+                    html += `
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 12px;">${backup.date}</td>
+                            <td style="padding: 12px;">${backup.size}</td>
+                            <td style="padding: 12px;">${backup.type}</td>
+                            <td style="padding: 12px;">
+                                <span style="color: var(--success-color);">✅ ${backup.status}</span>
+                            </td>
+                            <td style="padding: 12px;">
+                                <button type="button" class="btn btn-sm" onclick="restoreBackup('${backup.date}')">
+                                    <span>🔄</span>
+                                    <span>恢复</span>
+                                </button>
+                                <button type="button" class="btn btn-sm" onclick="downloadBackup('${backup.date}')">
+                                    <span>📥</span>
+                                    <span>下载</span>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="deleteBackup('${backup.date}')">
+                                    <span>🗑️</span>
+                                    <span>删除</span>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading backup list:', error);
+                container.innerHTML = '<p style="color: var(--text-secondary);">无法加载备份列表</p>';
+            }
+        }
+
+        function loadLogs() {
+            const container = document.getElementById('logContainer');
+
+            // Mock log data
+            const mockLogs = [
+                { timestamp: '2024-01-15 10:30:15', level: 'info', message: 'System started successfully' },
+                { timestamp: '2024-01-15 10:25:32', level: 'success', message: 'Database backup completed' },
+                { timestamp: '2024-01-15 10:20:18', level: 'warning', message: 'High memory usage detected: 85%' },
+                { timestamp: '2024-01-15 10:15:44', level: 'info', message: 'User authentication: user@example.com' },
+                { timestamp: '2024-01-15 10:10:22', level: 'error', message: 'Failed to connect to external service: timeout' },
+                { timestamp: '2024-01-15 10:05:10', level: 'info', message: 'Scheduled maintenance task completed' }
+            ];
+
+            let logHtml = '';
+            mockLogs.forEach(log => {
+                const levelClass = `log-level-${log.level}`;
+                const levelEmoji = {
+                    'info': 'ℹ️',
+                    'success': '✅',
+                    'warning': '⚠️',
+                    'error': '❌'
+                }[log.level];
+
+                logHtml += `<div><span class="${levelClass}">[${log.timestamp}] ${levelEmoji} ${log.level.toUpperCase()}: ${log.message}</span></div>`;
+            });
+
+            container.innerHTML = logHtml || '<div style="color: var(--text-secondary);">暂无日志记录</div>';
+        }
+
+        function toggleSwitch(element) {
+            element.classList.toggle('active');
+        }
+
+        function resetForm(formId) {
+            const form = document.getElementById(formId);
+            if (form) {
+                form.reset();
+                // Reset switches to initial state
+                form.querySelectorAll('.switch').forEach(switchElement => {
+                    // Set to default state based on the data-default attribute or default behavior
+                    if (switchElement.hasAttribute('data-default')) {
+                        if (switchElement.getAttribute('data-default') === 'true') {
+                            switchElement.classList.add('active');
+                        } else {
+                            switchElement.classList.remove('active');
+                        }
+                    }
+                });
+            }
+        }
+
+        async function saveSettings(section) {
+            try {
+                // In a real application, this would send data to the server
+                console.log(`Saving settings for section: ${section}`);
+
+                // Show success message
+                showNotification('设置已保存', 'success');
+            } catch (error) {
+                console.error('Error saving settings:', error);
+                showNotification('保存设置失败', 'error');
+            }
+        }
+
+        async function createBackup() {
+            try {
+                showNotification('正在创建备份...', 'info');
+
+                // Simulate backup creation
+                setTimeout(() => {
+                    showNotification('备份创建成功', 'success');
+                    loadBackupList();
+                }, 2000);
+            } catch (error) {
+                console.error('Error creating backup:', error);
+                showNotification('创建备份失败', 'error');
+            }
+        }
+
+        async function refreshLogs() {
+            const container = document.getElementById('logContainer');
+            container.innerHTML = '<div>正在刷新日志...</div>';
+
+            setTimeout(() => {
+                loadLogs();
+            }, 1000);
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create a simple notification (in a real app, you'd use a proper notification system)
+            const alertClass = `alert-${type}`;
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass}`;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '10000';
+            notification.style.minWidth = '300px';
+            notification.innerHTML = `
+                <span>${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Mobile menu functionality
+        function initMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
+            // Toggle mobile menu
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+
+            // Close menu when clicking links
+            const mobileLinks = mobileMenu.querySelectorAll('.mobile-nav-link');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+
+            // Mobile logout functionality
+            mobileLogoutBtn.addEventListener('click', async () => {
+                await handleLogout();
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!menuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                }
+            });
+        }
+
+        // Logout functionality
+        async function handleLogout() {
+            try {
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    window.location.href = '/login/';
+                } else {
+                    alert('Logout failed');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Network error during logout');
+            }
+        }
+
+        // Placeholder functions for backup actions
+        function restoreBackup(date) {
+            if (confirm(`确定要恢复 ${date} 的备份吗？这将覆盖当前数据。`)) {
+                showNotification('正在恢复备份...', 'info');
+            }
+        }
+
+        function downloadBackup(date) {
+            showNotification(`正在下载 ${date} 的备份...`, 'info');
+        }
+
+        function deleteBackup(date) {
+            if (confirm(`确定要删除 ${date} 的备份吗？此操作不可恢复。`)) {
+                showNotification('备份已删除', 'success');
+                loadBackupList();
+            }
+        }
+
+        function downloadLogs() {
+            showNotification('正在下载日志文件...', 'info');
+        }
+    </script>
+</body>
+</html>

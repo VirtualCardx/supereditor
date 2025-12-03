@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的图片 - SuperEditor</title>
+    <!-- Ant Design CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/antd@5.21.6/dist/reset.css">
+    <!-- Ant Design Icons -->
+    <link rel="stylesheet" href="https://unpkg.com/@ant-design/icons@5.4.0/lib/index.css">
+    <style>
+        :root {
+            --primary-color: #2F4F39;
+            --primary-hover: #233A2B;
+            --primary-light: #7BA89E;
+            --background-light: #E6E1D6;
+            --text-color: #333;
+            --text-secondary: #666;
+            --border-color: #d9d9d9;
+            --shadow: 0 3px 6px -4px rgba(0,0,0,.12), 0 6px 16px 0 rgba(0,0,0,.08), 0 9px 28px 8px rgba(0,0,0,.05);
+            --card-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: var(--text-color);
+        }
+
+        .app-layout {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            gap: 24px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo::before {
+            content: '📝';
+            font-size: 24px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: rgba(47, 79, 57, 0.1);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(47, 79, 57, 0.15);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-name {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .app-content {
+            flex: 1;
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin: 8px 0 0 0;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 6px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .btn-danger {
+            background-color: #ff4d4f;
+            border-color: #ff4d4f;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d9363e;
+            border-color: #d9363e;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            border-color: #d9d9d9;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn-lg {
+            padding: 8px 20px;
+            font-size: 16px;
+            height: 40px;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 12px;
+            height: 24px;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f5f5f5;
+            border-color: var(--primary-light);
+        }
+
+        /* Hamburger menu styles */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .menu-toggle:hover {
+            background-color: rgba(47, 79, 57, 0.1);
+        }
+
+        /* Mobile menu styles */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            z-index: 200;
+            max-height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 12px 24px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .mobile-nav-link:hover {
+            background-color: rgba(47, 79, 57, 0.1);
+            color: var(--primary-color);
+        }
+
+        .mobile-nav-link:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Image Grid */
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .image-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .image-card:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s;
+        }
+
+        .image-card:hover .image-container img {
+            transform: scale(1.05);
+        }
+
+        .image-info {
+            padding: 16px;
+        }
+
+        .image-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .image-meta {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .image-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            background: white;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 32px;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(47, 79, 57, 0.02);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary-color);
+            background: rgba(47, 79, 57, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            color: var(--text-color);
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        /* Upload Preview Container */
+        .upload-preview-container {
+            margin-bottom: 32px;
+        }
+
+        .upload-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .upload-preview-card {
+            background: white;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .upload-preview-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-preview-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+
+        .upload-preview-info {
+            padding: 16px;
+        }
+
+        .upload-preview-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .upload-preview-meta {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .upload-progress-container {
+            margin-top: 8px;
+        }
+
+        .upload-progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .upload-progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .upload-progress-text {
+            font-size: 12px;
+            color: var(--primary-color);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .upload-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .upload-status.pending {
+            background-color: #fff7e6;
+            color: #d46b08;
+        }
+
+        .upload-status.uploading {
+            background-color: #e6f7ff;
+            color: #0958d9;
+        }
+
+        .upload-status.success {
+            background-color: #f6ffed;
+            color: #52c41a;
+        }
+
+        .upload-status.error {
+            background-color: #fff2f0;
+            color: #ff4d4f;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .empty-state-description {
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Pagination */
+        .pagination-container {
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-info {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-right: 16px;
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pagination-btn {
+            min-width: 32px;
+            height: 32px;
+            padding: 0 8px;
+            border: 1px solid var(--border-color);
+            background: white;
+            color: var(--text-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            color: var(--text-secondary);
+        }
+
+        .pagination-btn.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .pagination-btn.active:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .pagination-ellipsis {
+            color: var(--text-secondary);
+            padding: 0 8px;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .page-jump {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 16px;
+        }
+
+        .page-jump input {
+            width: 60px;
+            height: 32px;
+            padding: 0 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .page-jump input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(47, 79, 57, 0.2);
+        }
+
+        .page-jump button {
+            height: 32px;
+            padding: 0 12px;
+            border: 1px solid var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .page-jump button:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.45);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background-color: #f5f5f5;
+            color: var(--text-color);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+            text-align: center;
+        }
+
+        .modal-body img {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        .modal-image-info {
+            margin-top: 16px;
+            text-align: left;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 16px;
+                gap: 12px;
+            }
+
+            .main-nav {
+                gap: 4px;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
+
+            .nav-link {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+
+            .app-content {
+                padding: 16px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .images-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 16px;
+            }
+
+            .upload-preview-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 16px;
+            }
+
+            .image-container {
+                height: 150px;
+            }
+
+            .upload-preview-image {
+                height: 150px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 0 8px;
+                gap: 8px;
+                position: relative;
+            }
+
+            .main-nav {
+                display: none;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .user-menu {
+                position: relative;
+            }
+
+            .images-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-preview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-area {
+                padding: 30px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <header class="app-header">
+            <div class="header-content">
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">☰</button>
+                <a href="/dashboard/" class="logo">SuperEditor</a>
+                <nav class="main-nav">
+                    <a href="/my-documents/" class="nav-link">我的文档</a>
+                    <a href="/my-images/" class="nav-link active">我的图片</a>
+                    <a href="/my-files/" class="nav-link">我的文件</a>
+                    <a href="/system-settings/" class="nav-link">系统设置</a>
+                    <a href="/user-settings/" class="nav-link">用户设置</a>
+                </nav>
+                <div class="user-menu">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <button type="button" class="btn btn-secondary" id="logoutBtn">退出登录</button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <a href="/my-documents/" class="mobile-nav-link">我的文档</a>
+                <a href="/my-images/" class="mobile-nav-link">我的图片</a>
+                <a href="/my-files/" class="mobile-nav-link">我的文件</a>
+                <a href="/system-settings/" class="mobile-nav-link">系统设置</a>
+                <a href="/user-settings/" class="mobile-nav-link">用户设置</a>
+                <button class="mobile-nav-link" id="mobileLogoutBtn" style="background: none; border: none; text-align: left; cursor: pointer;">退出登录</button>
+            </div>
+        </header>
+
+        <div class="app-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">我的图片</h1>
+                    <p class="page-subtitle">管理您的图片资源，支持上传和预览</p>
+                </div>
+                <button type="button" class="btn btn-primary btn-lg" id="uploadBtn">
+                    <span>📤</span>
+                    <span>上传图片</span>
+                </button>
+            </div>
+
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📸</div>
+                <div class="upload-text">点击或拖拽图片到此处上传</div>
+                <div class="upload-hint">支持 JPG、PNG、GIF 格式，单个文件最大 10MB</div>
+                <button type="button" class="btn btn-primary">选择图片</button>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+            </div>
+
+            <!-- Upload Preview Container -->
+            <div class="upload-preview-container" id="uploadPreviewContainer" style="display: none;">
+                <div class="upload-preview-grid" id="uploadPreviewGrid">
+                    <!-- Preview cards will be added here -->
+                </div>
+            </div>
+
+            <div class="images-grid" id="imagesContainer">
+                <!-- Images will be loaded here -->
+            </div>
+
+            <!-- Pagination Container -->
+            <div class="pagination-container" id="paginationContainer">
+                <!-- Pagination will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="imageModalTitle">图片预览</h2>
+                <button type="button" class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Preview">
+                <div class="modal-image-info" id="modalImageInfo">
+                    <!-- Image info will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pagination state
+        let currentPage = 1;
+        let totalPages = 1;
+        let totalRecords = 0;
+        let pageSize = 12;
+        let currentSearch = '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize mobile menu
+            initMobileMenu();
+
+            // Load user information and check authentication
+            loadUserInfo();
+
+            // Load images with pagination
+            loadImages(1);
+
+            // Initialize upload functionality
+            initializeUpload();
+
+            // Event listeners
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                await handleLogout();
+            });
+            document.getElementById('modalClose').addEventListener('click', () => {
+                document.getElementById('imageModal').classList.remove('show');
+            });
+
+            // Close modal on outside click
+            window.addEventListener('click', (event) => {
+                const modal = document.getElementById('imageModal');
+                if (event.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+        });
+
+        // Get the base URL for external links
+        function getBaseUrl() {
+            return window.location.origin;
+        }
+
+        // Convert relative URL to full external URL
+        function getExternalUrl(relativeUrl) {
+            return getBaseUrl() + relativeUrl;
+        }
+
+        async function loadUserInfo() {
+            try {
+                const response = await fetch('/api/auth/me', {
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('userName').textContent = data.name || data.email || 'User';
+                } else {
+                    if (response.status === 401) {
+                        window.location.href = '/login/';
+                        return;
+                    }
+                    document.getElementById('userName').textContent = 'User';
+                    console.error('Failed to load user info:', data.error);
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                document.getElementById('userName').textContent = 'User';
+                window.location.href = '/login/';
+            }
+        }
+
+        async function loadImages(page = 1, search = '') {
+            try {
+                const params = new URLSearchParams({
+                    page: page.toString(),
+                    limit: pageSize.toString(),
+                    search: search
+                });
+
+                const response = await fetch(`/api/images?${params}`, {
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Update pagination state
+                    currentPage = data.pagination.currentPage;
+                    totalPages = data.pagination.totalPages;
+                    totalRecords = data.pagination.totalRecords;
+                    currentSearch = search;
+
+                    renderImages(data.images);
+                    renderPagination();
+                } else {
+                    console.error('Failed to load images:', data.error);
+                    document.getElementById('imagesContainer').innerHTML =
+                        `<p>Error loading images: ${data.error}</p>`;
+                    document.getElementById('paginationContainer').innerHTML = '';
+                }
+            } catch (error) {
+                console.error('Error loading images:', error);
+                document.getElementById('imagesContainer').innerHTML =
+                    `<p>Error loading images: ${error.message}</p>`;
+                document.getElementById('paginationContainer').innerHTML = '';
+            }
+        }
+
+        function renderImages(images) {
+            const container = document.getElementById('imagesContainer');
+            container.innerHTML = '';
+
+            if (images.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🖼️</div>
+                        <div class="empty-state-title">暂无图片</div>
+                        <div class="empty-state-description">上传您的第一张图片开始使用吧！</div>
+                    </div>
+                `;
+                return;
+            }
+
+            images.forEach(image => {
+                const card = document.createElement('div');
+                card.className = 'image-card';
+
+                const createdDate = new Date(image.created_at).toLocaleDateString('zh-CN');
+                const fileSize = image.size ? formatFileSize(image.size) : '未知';
+
+                card.innerHTML = `
+                    <div class="image-container">
+                        <img src="${image.url}" alt="${image.name}" loading="lazy">
+                    </div>
+                    <div class="image-info">
+                        <div class="image-name" title="${image.name}">${image.name}</div>
+                        <div class="image-meta">
+                            <span>📅 ${createdDate}</span>
+                            <span>💾 ${fileSize}</span>
+                            <span>📏 ${image.width || 800} × ${image.height || 600}</span>
+                        </div>
+                        <div class="image-actions">
+                            <button class="btn btn-sm" onclick="viewImage('${image.url}', '${image.name}', ${image.width || 'null'}, ${image.height || 'null'}, ${image.size || 0})">
+                                <span>👁️</span>
+                                <span>查看</span>
+                            </button>
+                            <button class="btn btn-sm" onclick="copyImageUrl('${image.url}', event)">
+                                <span>🔗</span>
+                                <span>复制链接</span>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteImage('${image.id}', '${image.name}')">
+                                <span>🗑️</span>
+                                <span>删除</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderPagination() {
+            const container = document.getElementById('paginationContainer');
+
+            // Only render pagination if there's more than one page
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            // Calculate record range for current page
+            const startRecord = (currentPage - 1) * pageSize + 1;
+            const endRecord = Math.min(currentPage * pageSize, totalRecords);
+
+            let paginationHTML = '';
+
+            // Pagination info
+            paginationHTML += `
+                <div class="pagination-info">
+                    显示 ${startRecord}-${endRecord} 条，共 ${totalRecords} 条记录
+                </div>
+            `;
+
+            // Pagination controls
+            paginationHTML += '<div class="pagination-controls">';
+
+            // Previous button
+            paginationHTML += `
+                <button class="pagination-btn"
+                        onclick="goToPage(${currentPage - 1})"
+                        ${currentPage === 1 ? 'disabled' : ''}>
+                    上一页
+                </button>
+            `;
+
+            // Page numbers
+            const pageNumbers = generatePageNumbers();
+            pageNumbers.forEach(page => {
+                if (page === '...') {
+                    paginationHTML += '<span class="pagination-ellipsis">...</span>';
+                } else {
+                    paginationHTML += `
+                        <button class="pagination-btn ${page === currentPage ? 'active' : ''}"
+                                onclick="goToPage(${page})">
+                            ${page}
+                        </button>
+                    `;
+                }
+            });
+
+            // Next button
+            paginationHTML += `
+                <button class="pagination-btn"
+                        onclick="goToPage(${currentPage + 1})"
+                        ${currentPage === totalPages ? 'disabled' : ''}>
+                    下一页
+                </button>
+            `;
+
+            paginationHTML += '</div>';
+
+            // Page jump
+            paginationHTML += `
+                <div class="page-jump">
+                    <span>前往</span>
+                    <input type="number"
+                           id="pageJumpInput"
+                           min="1"
+                           max="${totalPages}"
+                           value="${currentPage}"
+                           onkeypress="handlePageJumpKeyPress(event)">
+                    <button onclick="jumpToPage()">确定</button>
+                </div>
+            `;
+
+            container.innerHTML = paginationHTML;
+        }
+
+        function generatePageNumbers() {
+            const pages = [];
+            const totalPagesToShow = 5;
+
+            if (totalPages <= totalPagesToShow) {
+                // Show all pages if there are not too many
+                for (let i = 1; i <= totalPages; i++) {
+                    pages.push(i);
+                }
+            } else {
+                // Show first page
+                pages.push(1);
+
+                // Calculate range around current page
+                let startPage = Math.max(2, currentPage - 1);
+                let endPage = Math.min(totalPages - 1, currentPage + 1);
+
+                // Ensure we show enough pages
+                if (currentPage <= 3) {
+                    startPage = 2;
+                    endPage = Math.min(4, totalPages - 1);
+                } else if (currentPage >= totalPages - 2) {
+                    startPage = Math.max(totalPages - 3, 2);
+                    endPage = totalPages - 1;
+                }
+
+                // Add ellipsis if needed
+                if (startPage > 2) {
+                    pages.push('...');
+                }
+
+                // Add pages around current page
+                for (let i = startPage; i <= endPage; i++) {
+                    pages.push(i);
+                }
+
+                // Add ellipsis if needed
+                if (endPage < totalPages - 1) {
+                    pages.push('...');
+                }
+
+                // Show last page
+                if (totalPages > 1) {
+                    pages.push(totalPages);
+                }
+            }
+
+            return pages;
+        }
+
+        function goToPage(page) {
+            if (page < 1 || page > totalPages || page === currentPage) {
+                return;
+            }
+            loadImages(page, currentSearch);
+        }
+
+        function jumpToPage() {
+            const input = document.getElementById('pageJumpInput');
+            const page = parseInt(input.value);
+
+            if (!isNaN(page) && page >= 1 && page <= totalPages) {
+                goToPage(page);
+            } else {
+                // Reset to current page if invalid
+                input.value = currentPage;
+            }
+        }
+
+        function handlePageJumpKeyPress(event) {
+            if (event.key === 'Enter') {
+                jumpToPage();
+            }
+        }
+
+        function initializeUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const uploadBtn = document.getElementById('uploadBtn');
+
+            // Click handlers
+            uploadArea.addEventListener('click', () => fileInput.click());
+            uploadBtn.addEventListener('click', () => fileInput.click());
+
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+
+            // Drag and drop
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+        }
+
+        // Enhanced upload functionality with preview and progress
+        let uploadQueue = [];
+        let isUploading = false;
+
+        async function handleFiles(files) {
+            if (files.length === 0) return;
+
+            // Add files to upload queue
+            for (let file of files) {
+                if (!file.type.startsWith('image/')) {
+                    alert(`文件 ${file.name} 不是有效的图片格式`);
+                    continue;
+                }
+
+                if (file.size > 10 * 1024 * 1024) { // 10MB
+                    alert(`文件 ${file.name} 超过 10MB 大小限制`);
+                    continue;
+                }
+
+                const uploadId = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                uploadQueue.push({
+                    id: uploadId,
+                    file: file,
+                    status: 'pending',
+                    progress: 0,
+                    previewUrl: null
+                });
+            }
+
+            // Clear file input
+            document.getElementById('fileInput').value = '';
+
+            // Start processing upload queue
+            if (!isUploading) {
+                processUploadQueue();
+            }
+        }
+
+        async function processUploadQueue() {
+            if (uploadQueue.length === 0) {
+                isUploading = false;
+                return;
+            }
+
+            isUploading = true;
+            const uploadItem = uploadQueue.find(item => item.status === 'pending');
+
+            if (!uploadItem) {
+                // No pending items, check if we should reload
+                const hasSuccessfulUploads = uploadQueue.some(item => item.status === 'success');
+                if (hasSuccessfulUploads) {
+                    // Reload images to first page to show newly uploaded images
+                    loadImages(1, currentSearch);
+                    // Clear the preview container after a delay
+                    setTimeout(() => {
+                        clearUploadPreviews();
+                        uploadQueue = uploadQueue.filter(item => item.status !== 'success');
+                    }, 3000);
+                }
+                isUploading = false;
+                return;
+            }
+
+            uploadItem.status = 'uploading';
+            renderUploadPreviews();
+
+            try {
+                await uploadImageWithProgress(uploadItem);
+            } catch (error) {
+                uploadItem.status = 'error';
+                uploadItem.error = error.message;
+                renderUploadPreviews();
+            }
+
+            // Continue processing the queue
+            setTimeout(() => processUploadQueue(), 100);
+        }
+
+        function renderUploadPreviews() {
+            const container = document.getElementById('uploadPreviewContainer');
+            const grid = document.getElementById('uploadPreviewGrid');
+
+            if (uploadQueue.length === 0) {
+                container.style.display = 'none';
+                grid.innerHTML = '';
+                return;
+            }
+
+            container.style.display = 'block';
+            grid.innerHTML = '';
+
+            uploadQueue.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'upload-preview-card';
+                card.id = `upload-preview-${item.id}`;
+
+                const fileSize = formatFileSize(item.file.size);
+                let statusClass = item.status;
+                let statusText = '';
+                let statusIcon = '';
+
+                switch (item.status) {
+                    case 'pending':
+                        statusText = '等待上传';
+                        statusIcon = '⏳';
+                        break;
+                    case 'uploading':
+                        statusText = `上传中 ${item.progress}%`;
+                        statusIcon = '⬆️';
+                        break;
+                    case 'success':
+                        statusText = '上传成功';
+                        statusIcon = '✅';
+                        break;
+                    case 'error':
+                        statusText = '上传失败';
+                        statusIcon = '❌';
+                        break;
+                }
+
+                card.innerHTML = `
+                    <div class="upload-preview-image">
+                        ${item.previewUrl ?
+                            `<img src="${item.previewUrl}" alt="${item.file.name}" />` :
+                            `<div style="font-size: 48px; opacity: 0.3;">📷</div>`
+                        }
+                    </div>
+                    <div class="upload-preview-info">
+                        <div class="upload-preview-name" title="${item.file.name}">${item.file.name}</div>
+                        <div class="upload-preview-meta">
+                            <span>💾 ${fileSize}</span>
+                        </div>
+                        <div class="upload-progress-container">
+                            <div class="upload-progress-bar">
+                                <div class="upload-progress-fill" style="width: ${item.progress}%"></div>
+                            </div>
+                            <div class="upload-progress-text">${item.progress}%</div>
+                        </div>
+                        <div class="upload-status ${statusClass}">
+                            <span>${statusIcon}</span>
+                            <span>${statusText}</span>
+                            ${item.error ? `<span style="margin-left: 8px; font-size: 11px;">${item.error}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+
+                // Generate preview URL for pending/uploading items
+                if (!item.previewUrl && (item.status === 'pending' || item.status === 'uploading')) {
+                    generatePreviewUrl(item);
+                }
+            });
+        }
+
+        function generatePreviewUrl(uploadItem) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadItem.previewUrl = e.target.result;
+                // Update the preview card if it still exists
+                const card = document.getElementById(`upload-preview-${uploadItem.id}`);
+                if (card) {
+                    const imageContainer = card.querySelector('.upload-preview-image');
+                    imageContainer.innerHTML = `<img src="${uploadItem.previewUrl}" alt="${uploadItem.file.name}" />`;
+                }
+            };
+            reader.readAsDataURL(uploadItem.file);
+        }
+
+        async function uploadImageWithProgress(uploadItem) {
+            const formData = new FormData();
+            formData.append('image', uploadItem.file);
+
+            // Create XMLHttpRequest for progress tracking
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+
+                // Progress tracking
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = Math.round((e.loaded / e.total) * 100);
+                        uploadItem.progress = percentComplete;
+                        updateUploadProgress(uploadItem.id, percentComplete);
+                    }
+                });
+
+                // Load complete
+                xhr.addEventListener('load', () => {
+                    try {
+                        const result = JSON.parse(xhr.responseText);
+                        if (xhr.status === 200 && result.message) {
+                            uploadItem.status = 'success';
+                            uploadItem.progress = 100;
+                            updateUploadProgress(uploadItem.id, 100);
+                            resolve(result);
+                        } else {
+                            reject(new Error(result.error || 'Upload failed'));
+                        }
+                    } catch (error) {
+                        reject(new Error('Invalid response from server'));
+                    }
+                });
+
+                // Error handling
+                xhr.addEventListener('error', () => {
+                    reject(new Error('Network error during upload'));
+                });
+
+                xhr.addEventListener('timeout', () => {
+                    reject(new Error('Upload timeout'));
+                });
+
+                // Configure and send request
+                xhr.timeout = 300000; // 5 minutes timeout
+                xhr.open('POST', '/api/images/upload');
+                xhr.withCredentials = true;
+                xhr.send(formData);
+            });
+        }
+
+        function updateUploadProgress(uploadId, progress) {
+            const uploadItem = uploadQueue.find(item => item.id === uploadId);
+            if (uploadItem) {
+                uploadItem.progress = progress;
+
+                // Update the UI if the card exists
+                const card = document.getElementById(`upload-preview-${uploadId}`);
+                if (card) {
+                    const progressFill = card.querySelector('.upload-progress-fill');
+                    const progressText = card.querySelector('.upload-progress-text');
+                    const statusElement = card.querySelector('.upload-status');
+
+                    if (progressFill) progressFill.style.width = `${progress}%`;
+                    if (progressText) progressText.textContent = `${progress}%`;
+
+                    // Update the status text for uploading items
+                    if (statusElement && uploadItem.status === 'uploading') {
+                        const statusTextSpan = statusElement.querySelector('span:last-child');
+                        if (statusTextSpan) {
+                            statusTextSpan.textContent = `上传中 ${progress}%`;
+                        }
+                    }
+                }
+            }
+        }
+
+        function clearUploadPreviews() {
+            const container = document.getElementById('uploadPreviewContainer');
+            const grid = document.getElementById('uploadPreviewGrid');
+
+            // Clear successful uploads
+            uploadQueue = uploadQueue.filter(item => item.status !== 'success');
+
+            if (uploadQueue.length === 0) {
+                container.style.display = 'none';
+                grid.innerHTML = '';
+            } else {
+                renderUploadPreviews();
+            }
+        }
+
+        function viewImage(url, name, width, height, size) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('imageModalTitle');
+            const modalImageInfo = document.getElementById('modalImageInfo');
+
+            modalImage.src = url;
+            modalTitle.textContent = name;
+
+            const fileSize = size ? formatFileSize(size) : '未知';
+            const widthText = (width && width !== 'null') ? width : '800';
+            const heightText = (height && height !== 'null') ? height : '600';
+
+            // Convert relative URL to full external URL for display
+            const externalUrl = getExternalUrl(url);
+
+            modalImageInfo.innerHTML = `
+                <p><strong>文件名:</strong> ${name}</p>
+                <p><strong>尺寸:</strong> ${widthText} × ${heightText}</p>
+                <p><strong>大小:</strong> ${fileSize}</p>
+                <p><strong>链接:</strong> <a href="${externalUrl}" target="_blank" style="word-break: break-all;">${externalUrl}</a></p>
+            `;
+
+            modal.classList.add('show');
+        }
+
+        async function copyImageUrl(url, event) {
+            try {
+                // Convert relative URL to full external URL
+                const externalUrl = getExternalUrl(url);
+                await navigator.clipboard.writeText(externalUrl);
+                // Show temporary success message
+                const btn = event.target.closest('button');
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = '<span>✅</span><span>已复制</span>';
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy URL:', err);
+                alert('复制链接失败，请手动复制');
+            }
+        }
+
+        async function deleteImage(id, name) {
+            if (!confirm(`确定要删除图片 "${name}" 吗？此操作不可恢复。`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/images/${id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Reload images with current page to maintain pagination state
+                    // If this was the last item on the page and we're not on the first page, go to previous page
+                    let pageToLoad = currentPage;
+                    if (totalRecords % pageSize === 1 && currentPage > 1) {
+                        pageToLoad = currentPage - 1;
+                    }
+                    loadImages(pageToLoad, currentSearch);
+                } else {
+                    alert(`删除失败: ${result.error}`);
+                }
+            } catch (error) {
+                console.error('Error deleting image:', error);
+                alert('删除图片时发生网络错误');
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (!bytes) return '未知';
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        // Mobile menu functionality
+        function initMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
+            // Toggle mobile menu
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+
+            // Close menu when clicking links
+            const mobileLinks = mobileMenu.querySelectorAll('.mobile-nav-link');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+
+            // Mobile logout functionality
+            mobileLogoutBtn.addEventListener('click', async () => {
+                await handleLogout();
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!menuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                }
+            });
+        }
+
+        // Logout functionality
+        async function handleLogout() {
+            try {
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    window.location.href = '/login/';
+                } else {
+                    alert('Logout failed');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Network error during logout');
+            }
+        }
+    </script>
+</body>
+</html>
